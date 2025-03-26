@@ -1,5 +1,6 @@
-package com.waypost.waypost.security;
+package com.waypost.waypost.config;
 
+import com.waypost.waypost.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
