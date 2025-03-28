@@ -21,13 +21,22 @@
         values (0, #{email}, #{password}, #{username}, "profileImg", now(), now(), #{sttsCd})
     </insert>
 
-    <select id="findByEmail" parameterType="String" resultType="int">
+    <select id="findByEmail" parameterType="String" resultMap="UserResultMap">
         select
             *
         from
             user_tb
         where
             email = #{email}
+    </select>
+
+    <select id="findByUsername" parameterType="String" resultMap="UserResultMap">
+        select
+            *
+        from
+            user_tb
+        where
+            username = #{username}
     </select>
 
 </mapper>

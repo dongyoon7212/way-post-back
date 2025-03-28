@@ -7,5 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface AuthMapper {
 
     public int signUp(User user);
-    public String findByEmail(String email);
+    public User findByEmail(String email);
+    public User findByUsername(String username);
 }

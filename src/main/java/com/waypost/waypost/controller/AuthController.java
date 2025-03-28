@@ -4,10 +4,7 @@ import com.waypost.waypost.dto.SignUpReqDto;
 import com.waypost.waypost.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,7 +15,16 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUpReqDto signUpReqDto) {
-        System.out.println(signUpReqDto);
         return ResponseEntity.ok(authService.signUp(signUpReqDto));
+    }
+
+    @GetMapping("/duplChk/email")
+    public ResponseEntity<?> emailDuplChk(@RequestParam String email) {
+        return ResponseEntity.ok(authService.emailDuplChk(email));
+    }
+
+    @GetMapping("/duplChk/username")
+    public ResponseEntity<?> usernameDuplChk(@RequestParam String username) {
+        return ResponseEntity.ok(authService.usernameDuplChk(username));
     }
 }

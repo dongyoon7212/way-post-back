@@ -1,6 +1,7 @@
 package com.waypost.waypost.service;
 
 import com.waypost.waypost.dto.SignUpReqDto;
+import com.waypost.waypost.entity.User;
 import com.waypost.waypost.repository.AuthMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,11 +22,29 @@ public class AuthService {
 //            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 //        }
 
-        // 이메일 중복 검사 => 웹에서 중복확인 처리
+//         이메일 중복 검사 => 웹에서 중복확인 처리
 //        if (authMapper.findByEmail(signUpReqDto.getEmail()) != null) {
 //            throw new IllegalArgumentException("이미 등록된 이메일입니다.");
 //        }
 
         return authMapper.signUp(signUpReqDto.toEntity(passwordEncoder));
+    }
+
+    public int emailDuplChk(String email) {
+        User user = authMapper.findByEmail(email);
+        if (user == null) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    public int usernameDuplChk(String username) {
+        User user = authMapper.findByUsername(username);
+        if (user == null) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }

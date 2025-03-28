@@ -25,6 +25,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        // 🔴 인증이 필요 없는 경로 예외 처리
+        String requestURI = request.getRequestURI();
+        if (requestURI.startsWith("/auth/signup") || requestURI.startsWith("/auth/duplChk")) {  // ✅ 회원가입 요청은 필터링 안 함
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = getJwtFromRequest(request);
         if (token != null && jwtUtil.validateToken(token, getEmailFromToken(token))) {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
