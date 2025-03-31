@@ -23,7 +23,6 @@ public class SignUpReqDto {
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
-                .sttsCd("2")
                 .build();
     }
 }
