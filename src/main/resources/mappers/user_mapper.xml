@@ -40,11 +40,15 @@
 
     <select id="findByEmail" parameterType="String" resultMap="UserResultMap">
         select
-            *
+            ut.*,
+            urt.*,
+            rt.*
         from
-            user_tb
+            user_tb ut
+            left outer join user_role_tb urt on(urt.user_id = ut.user_id)
+            left outer join role_tb rt on(rt.role_id = urt.role_id)
         where
-            email = #{email}
+            email = #{email};
     </select>
 
     <select id="findByUsername" parameterType="String" resultMap="UserResultMap">

@@ -44,8 +44,8 @@ public class JwtAuthenticationFilter implements Filter {
             String accessToken = removeBearer(bearerToken);
             Claims claims = jwtUtil.parseToken(accessToken);
             if(claims != null) {
-                int userId = Integer.parseInt(claims.getId());
-                User user = getUser(userId);
+                String email = claims.getSubject();
+                User user = getUser(email);
                 setAuthentication(user);
             }
         }
@@ -54,10 +54,10 @@ public class JwtAuthenticationFilter implements Filter {
     }
 
     // redis, mysql
-    private User getUser(int userId) throws JsonProcessingException {
+    private User getUser(String email) throws JsonProcessingException {
         User user = null;
 
-        user = userRepository.findByUserId(userId).get();
+        user = userRepository.findByEmail(email).get();
 //        if(user != null) {
 //            String jsonUser = objectMapper.writeValueAsString(user);
 //            redisTemplate.opsForValue().set("user:" + userId, jsonUser, Duration.ofMinutes(10));
@@ -74,7 +74,7 @@ public class JwtAuthenticationFilter implements Filter {
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(
                         principalUser,
-                        null,
+                        user,
                         principalUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

@@ -2,10 +2,13 @@ package com.waypost.waypost.controller;
 
 import com.waypost.waypost.dto.SignInReqDto;
 import com.waypost.waypost.dto.SignUpReqDto;
+import com.waypost.waypost.security.principal.PrincipalUser;
 import com.waypost.waypost.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -16,6 +19,13 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @GetMapping("/principal")
+    public ResponseEntity<?> getPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
+        return ResponseEntity.ok(principalUser);
+    }
 
     //회원가입
     @PostMapping("/signup")
@@ -35,16 +45,12 @@ public class AuthController {
         return ResponseEntity.ok(authService.usernameDuplChk(username));
     }
 
-//    //로그인
-//    @PostMapping("/signin")
-//    public ResponseEntity<?> signIn(@RequestBody SignInReqDto signInReqDto) {
-//        try {
-//            String token = authService.signIn(signInReqDto);
-//            return ResponseEntity.ok().body(Map.of("token", token));
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-//        }
-//    }
+    //로그인
+    @PostMapping("/signin")
+    public ResponseEntity<?> signIn(@RequestBody SignInReqDto signInReqDto) {
+        System.out.println(signInReqDto);
+        return ResponseEntity.ok().body(authService.signIn(signInReqDto));
+    }
 
 
 }
