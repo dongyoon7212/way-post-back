@@ -1,8 +1,8 @@
 package com.waypost.waypost.service;
 
-import com.waypost.waypost.dto.SignInReqDto;
-import com.waypost.waypost.dto.SignInRespDto;
-import com.waypost.waypost.dto.SignUpReqDto;
+import com.waypost.waypost.dto.auth.SignInReqDto;
+import com.waypost.waypost.dto.auth.SignInRespDto;
+import com.waypost.waypost.dto.auth.SignUpReqDto;
 import com.waypost.waypost.entity.Role;
 import com.waypost.waypost.entity.User;
 import com.waypost.waypost.entity.UserRole;

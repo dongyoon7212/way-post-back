@@ -1,19 +1,15 @@
-package com.waypost.waypost.entity;
+package com.waypost.waypost.dto.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PhotoPost {
-    private int photoPostId;
+public class PhotoPostUploadReqDto {
     private int userId;
     private String postText;
     private String imgUrl;
@@ -21,7 +17,4 @@ public class PhotoPost {
     private String locationAddress;
     private double latitude;
     private double longitude;
-    private Point location;
-    private LocalDateTime regDt;
-    private LocalDateTime updDt;
 }

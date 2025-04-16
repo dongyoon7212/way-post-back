@@ -1,7 +1,7 @@
 package com.waypost.waypost.controller;
 
-import com.waypost.waypost.dto.SignInReqDto;
-import com.waypost.waypost.dto.SignUpReqDto;
+import com.waypost.waypost.dto.auth.SignInReqDto;
+import com.waypost.waypost.dto.auth.SignUpReqDto;
 import com.waypost.waypost.security.principal.PrincipalUser;
 import com.waypost.waypost.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,6 @@ public class AuthController {
     //로그인
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody SignInReqDto signInReqDto) {
-        System.out.println(signInReqDto);
         return ResponseEntity.ok().body(authService.signIn(signInReqDto));
     }
 
