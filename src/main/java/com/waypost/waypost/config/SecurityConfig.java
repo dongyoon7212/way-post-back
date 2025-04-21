@@ -54,7 +54,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth ->
                 auth
-                        .requestMatchers("/auth/**")
+                        .requestMatchers("/auth/**", "/post/photo/getlist")
                         .permitAll()
                         .anyRequest().authenticated());
         return http.build();

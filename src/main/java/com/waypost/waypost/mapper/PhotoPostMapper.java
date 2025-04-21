@@ -1,9 +1,13 @@
 package com.waypost.waypost.mapper;
 
+import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
 import com.waypost.waypost.entity.PhotoPost;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface PhotoPostMapper {
-    public int photoPostUpload(PhotoPost photoPost);
+    public int uploadPhotoPost(PhotoPost photoPost);
+    public List<PhotoPost> getPhotoPostList(GetPhotoPostListReqDto getPhotoPostListReqDto);
 }

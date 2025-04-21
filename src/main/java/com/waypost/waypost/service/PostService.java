@@ -1,10 +1,13 @@
 package com.waypost.waypost.service;
 
-import com.waypost.waypost.dto.post.PhotoPostUploadReqDto;
+import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
+import com.waypost.waypost.dto.post.UploadPhotoPostReqDto;
 import com.waypost.waypost.entity.PhotoPost;
 import com.waypost.waypost.repository.PhotoPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PostService {
@@ -12,16 +15,20 @@ public class PostService {
     @Autowired
     private PhotoPostRepository photoPostRepository;
 
-    public int photoPostUpload(PhotoPostUploadReqDto photoPostUploadReqDto) {
+    public int uploadPhotoPost(UploadPhotoPostReqDto uploadPhotoPostReqDto) {
         PhotoPost photoPost = PhotoPost.builder()
-                .userId(photoPostUploadReqDto.getUserId())
-                .postText(photoPostUploadReqDto.getPostText())
-                .imgUrl(photoPostUploadReqDto.getImgUrl())
-                .cameraModel(photoPostUploadReqDto.getCameraModel())
-                .locationAddress(photoPostUploadReqDto.getLocationAddress())
-                .latitude(photoPostUploadReqDto.getLatitude())
-                .longitude(photoPostUploadReqDto.getLongitude())
+                .userId(uploadPhotoPostReqDto.getUserId())
+                .postText(uploadPhotoPostReqDto.getPostText())
+                .imgUrl(uploadPhotoPostReqDto.getImgUrl())
+                .cameraModel(uploadPhotoPostReqDto.getCameraModel())
+                .locationAddress(uploadPhotoPostReqDto.getLocationAddress())
+                .latitude(uploadPhotoPostReqDto.getLatitude())
+                .longitude(uploadPhotoPostReqDto.getLongitude())
                 .build();
-        return photoPostRepository.photoPostUpload(photoPost);
+        return photoPostRepository.uploadPhotoPost(photoPost);
+    }
+
+    public List<PhotoPost> getPhotoPostList(GetPhotoPostListReqDto getPhotoPostListReqDto) {
+        return photoPostRepository.getPhotoPostList(getPhotoPostListReqDto);
     }
 }

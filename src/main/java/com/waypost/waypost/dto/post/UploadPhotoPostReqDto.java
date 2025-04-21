@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PhotoPostUploadReqDto {
+public class UploadPhotoPostReqDto {
     private int userId;
     private String postText;
     private String imgUrl;

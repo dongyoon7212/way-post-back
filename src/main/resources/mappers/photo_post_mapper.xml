@@ -20,7 +20,7 @@
         <result property="updDt" column="upd_dt" />
     </resultMap>
 
-    <insert id="photoPostUpload" >
+    <insert id="uploadPhotoPost" >
         insert into photo_post_tb
         values (
                 0,
@@ -36,4 +36,24 @@
                 NOW()
         )
     </insert>
+
+    <select id="getPhotoPostList" parameterType="map" resultMap="PhotoPostResultMap">
+        select
+            photo_post_id,
+            user_id,
+            post_text,
+            img_url,
+            camera_model,
+            location_address,
+            latitude,
+            longitude,
+            reg_dt,
+            upd_dt
+        from
+            photo_post_tb
+        where
+            latitude BETWEEN #{minLat} AND #{maxLat}
+            and
+            longitude BETWEEN #{minLng} AND #{maxLng};
+    </select>
 </mapper>
