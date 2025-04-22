@@ -18,6 +18,11 @@
         <result property="location" column="location" typeHandler="com.waypost.waypost.mybatis.PointTypeHandler" />
         <result property="regDt" column="reg_dt" />
         <result property="updDt" column="upd_dt" />
+        <association property="user" javaType="com.waypost.waypost.entity.User">
+            <result property="email" column="email" />
+            <result property="username" column="username" />
+            <result property="profileImg" column="profile_img" />
+        </association>
     </resultMap>
 
     <insert id="uploadPhotoPost" >
@@ -39,21 +44,24 @@
 
     <select id="getPhotoPostList" parameterType="map" resultMap="PhotoPostResultMap">
         select
-            photo_post_id,
-            user_id,
-            post_text,
-            img_url,
-            camera_model,
-            location_address,
-            latitude,
-            longitude,
-            reg_dt,
-            upd_dt
+            p.photo_post_id,
+            p.user_id,
+            p.post_text,
+            p.img_url,
+            p.camera_model,
+            p.location_address,
+            p.latitude,
+            p.longitude,
+            p.reg_dt,
+            p.upd_dt,
+            u.email,
+            u.username,
+            u.profile_img
         from
-            photo_post_tb
+            photo_post_tb p
+            left join user_tb u on p.user_id = u.user_id
         where
-            latitude BETWEEN #{minLat} AND #{maxLat}
-            and
-            longitude BETWEEN #{minLng} AND #{maxLng};
+            p.latitude  BETWEEN #{minLat} and #{maxLat}
+            and p.longitude BETWEEN #{minLng} and #{maxLng}
     </select>
 </mapper>

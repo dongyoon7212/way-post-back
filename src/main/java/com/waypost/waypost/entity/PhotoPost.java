@@ -24,4 +24,5 @@ public class PhotoPost {
     private Point location;
     private LocalDateTime regDt;
     private LocalDateTime updDt;
+    private User user;
 }
