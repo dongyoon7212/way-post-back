@@ -1,5 +1,6 @@
 package com.waypost.waypost.repository;
 
+import com.waypost.waypost.dto.account.EditProfileImgReqDto;
 import com.waypost.waypost.entity.User;
 import com.waypost.waypost.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,9 @@ public class UserRepository {
 
     public Optional<User> findByUsername(String username) {
         return Optional.ofNullable(userMapper.findByUsername(username));
+    }
+
+    public int editProfileImg(EditProfileImgReqDto editProfileImgReqDto) {
+        return userMapper.editProfileImg(editProfileImgReqDto.getUserId(), editProfileImgReqDto.getProfileImg());
     }
 }

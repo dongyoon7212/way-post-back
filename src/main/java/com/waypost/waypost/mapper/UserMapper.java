@@ -1,5 +1,6 @@
 package com.waypost.waypost.mapper;
 
+import com.waypost.waypost.dto.account.EditProfileImgReqDto;
 import com.waypost.waypost.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,5 +13,6 @@ public interface UserMapper {
     User findByEmail(String email);
     User findByUsername(String username);
     User findByUserId(int userId);
+    int editProfileImg(int userId, String profileImg);
 
 }

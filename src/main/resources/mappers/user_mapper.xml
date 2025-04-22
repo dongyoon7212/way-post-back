@@ -12,6 +12,7 @@
         <result property="password" column="password" />
         <result property="username" column="username" />
         <result property="profileImg" column="profile_img" />
+        <result property="introduce" column="introduce" />
         <result property="regDt" column="reg_dt" />
         <result property="updDt" column="upd_dt" />
         <result property="isAccountNonExpired" column="account_expired" />
@@ -59,5 +60,14 @@
         where
             username = #{username}
     </select>
+
+    <update id="editProfileImg" >
+        update
+            user_tb
+        set
+            profile_img = #{profileImg}
+        where
+            user_id = #{userId}
+    </update>
 
 </mapper>

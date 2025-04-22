@@ -20,6 +20,7 @@ public class User {
     private String password;
     private String username;
     private String profileImg;
+    private String introduce;
     private LocalDateTime regDt;
     private LocalDateTime updDt;
 
