@@ -64,4 +64,27 @@
             p.latitude  BETWEEN #{minLat} and #{maxLat}
             and p.longitude BETWEEN #{minLng} and #{maxLng}
     </select>
+    <select id="getPhotoPostListByUserId" resultType="map" resultMap="PhotoPostResultMap">
+        select
+            p.photo_post_id,
+            p.user_id,
+            p.post_text,
+            p.img_url,
+            p.camera_model,
+            p.location_address,
+            p.latitude,
+            p.longitude,
+            p.reg_dt,
+            p.upd_dt,
+            u.email,
+            u.username,
+            u.profile_img
+        from
+            photo_post_tb p
+            left join user_tb u on p.user_id = u.user_id
+        where
+            p.user_id = #{userId}
+        order by
+            p.reg_dt desc
+    </select>
 </mapper>

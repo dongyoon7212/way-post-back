@@ -31,4 +31,8 @@ public class PostService {
     public List<PhotoPost> getPhotoPostList(GetPhotoPostListReqDto getPhotoPostListReqDto) {
         return photoPostRepository.getPhotoPostList(getPhotoPostListReqDto);
     }
+
+    public List<PhotoPost> getPhotoPostListByUserId(int userId) {
+        return photoPostRepository.getPhotoPostListByUserId(userId);
+    }
 }

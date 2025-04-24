@@ -36,7 +36,7 @@
 
     <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
         insert into user_tb
-        values (0, #{email}, #{password}, #{username}, "profileImg", now(), now(), 1, 1, 1, 1, Null, Null)
+        values (0, #{email}, #{password}, #{username}, "https://firebasestorage.googleapis.com/v0/b/way-post-9f21b.firebasestorage.app/o/user-profile-img%2FprofileImg.jpg?alt=media&amp;token=f5cbbbf0-a382-4699-8248-13a948df38cf", "", now(), now(), 1, 1, 1, 1, Null, Null)
     </insert>
 
     <select id="findByEmail" parameterType="String" resultMap="UserResultMap">

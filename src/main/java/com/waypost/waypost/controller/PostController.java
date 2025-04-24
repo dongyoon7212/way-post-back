@@ -22,10 +22,15 @@ public class PostController {
     @GetMapping("/photo/getlist")
     public ResponseEntity<?> getPhotoPostList(@RequestParam double minLat, @RequestParam double maxLat, @RequestParam double minLng, @RequestParam double maxLng) {
         return ResponseEntity.ok().body(postService.getPhotoPostList(GetPhotoPostListReqDto.builder()
-                        .minLat(minLat)
-                        .maxLat(maxLat)
-                        .minLng(minLng)
-                        .maxLng(maxLng)
+                .minLat(minLat)
+                .maxLat(maxLat)
+                .minLng(minLng)
+                .maxLng(maxLng)
                 .build()));
+    }
+
+    @GetMapping("/photo/getlist/{userId}")
+    public ResponseEntity<?> getPhotoPostListByUserId(@PathVariable int userId) {
+        return ResponseEntity.ok().body(postService.getPhotoPostListByUserId(userId));
     }
 }

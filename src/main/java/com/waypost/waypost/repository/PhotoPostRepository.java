@@ -21,4 +21,8 @@ public class PhotoPostRepository {
     public List<PhotoPost> getPhotoPostList(GetPhotoPostListReqDto getPhotoPostListReqDto) {
         return photoPostMapper.getPhotoPostList(getPhotoPostListReqDto);
     }
+
+    public List<PhotoPost> getPhotoPostListByUserId(int userId) {
+        return photoPostMapper.getPhotoPostListByUserId(userId);
+    }
 }
