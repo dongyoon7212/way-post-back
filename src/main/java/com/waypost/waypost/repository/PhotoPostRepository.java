@@ -1,6 +1,8 @@
 package com.waypost.waypost.repository;
 
+import com.waypost.waypost.dto.post.AddCommentReqDto;
 import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
+import com.waypost.waypost.entity.Comment;
 import com.waypost.waypost.entity.PhotoPost;
 import com.waypost.waypost.mapper.PhotoPostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +26,9 @@ public class PhotoPostRepository {
 
     public List<PhotoPost> getPhotoPostListByUserId(int userId) {
         return photoPostMapper.getPhotoPostListByUserId(userId);
+    }
+
+    public int addComment(Comment comment) {
+        return photoPostMapper.addComment(comment);
     }
 }

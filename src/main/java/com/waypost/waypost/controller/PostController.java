@@ -1,5 +1,6 @@
 package com.waypost.waypost.controller;
 
+import com.waypost.waypost.dto.post.AddCommentReqDto;
 import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
 import com.waypost.waypost.dto.post.UploadPhotoPostReqDto;
 import com.waypost.waypost.service.PostService;
@@ -33,4 +34,10 @@ public class PostController {
     public ResponseEntity<?> getPhotoPostListByUserId(@PathVariable int userId) {
         return ResponseEntity.ok().body(postService.getPhotoPostListByUserId(userId));
     }
+
+    @PostMapping("/photo/comment/add")
+    public ResponseEntity<?> addComment(@RequestBody AddCommentReqDto addCommentReqDto) {
+        return ResponseEntity.ok(postService.addComment(addCommentReqDto));
+    }
+
 }

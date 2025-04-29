@@ -23,6 +23,26 @@
             <result property="username" column="username" />
             <result property="profileImg" column="profile_img" />
         </association>
+        <collection
+                property="comments"
+                ofType="com.waypost.waypost.entity.Comment"
+                column="photo_post_id"
+                select="com.waypost.waypost.mapper.PhotoPostMapper.getCommentsByPostIdAndUser"
+        />
+    </resultMap>
+
+    <resultMap id="CommentResultMap" type="com.waypost.waypost.entity.Comment">
+        <id     property="commentId" column="comment_id"/>
+        <result property="photoPostId" column="photo_post_id"/>
+        <result property="userId"      column="user_id"/>
+        <result property="content"     column="content"/>
+        <result property="regDt"       column="reg_dt"/>
+        <result property="updDt"       column="upd_dt"/>
+        <association property="user" javaType="com.waypost.waypost.entity.User">
+            <id     property="userId"     column="c_user_id"/>
+            <result property="username"   column="c_username"/>
+            <result property="profileImg" column="c_profile_img"/>
+        </association>
     </resultMap>
 
     <insert id="uploadPhotoPost" >
@@ -64,6 +84,7 @@
             p.latitude  BETWEEN #{minLat} and #{maxLat}
             and p.longitude BETWEEN #{minLng} and #{maxLng}
     </select>
+
     <select id="getPhotoPostListByUserId" resultType="map" resultMap="PhotoPostResultMap">
         select
             p.photo_post_id,
@@ -78,13 +99,55 @@
             p.upd_dt,
             u.email,
             u.username,
-            u.profile_img
+            u.profile_img,
+            c.comment_id,
+            c.photo_post_id,
+            c.user_id,
+            c.content,
+            c.reg_dt,
+            c.upd_dt,
+            cu.username,
+            cu.profile_img
         from
             photo_post_tb p
             left join user_tb u on p.user_id = u.user_id
+            left join comment_tb c on p.photo_post_id = c.photo_post_id
+            left join user_tb cu on c.user_id = cu.user_id
+
         where
             p.user_id = #{userId}
         order by
-            p.reg_dt desc
+            p.reg_dt DESC
+    </select>
+
+    <insert id="addComment" >
+        insert into comment_tb
+        values (
+            0,
+            #{photoPostId},
+            #{userId},
+            #{content},
+            now(),
+            now()
+        )
+    </insert>
+
+    <select id="getCommentsByPostIdAndUser" resultMap="CommentResultMap" parameterType="int">
+        SELECT
+            c.comment_id,
+            c.photo_post_id,
+            c.user_id     AS c_user_id,
+            c.content,
+            c.reg_dt,
+            c.upd_dt,
+            u.username    AS c_username,
+            u.profile_img AS c_profile_img
+        FROM
+            comment_tb c
+            JOIN user_tb u ON c.user_id = u.user_id
+        WHERE
+            c.photo_post_id = #{photoPostId}
+        ORDER BY
+            c.reg_dt ASC
     </select>
 </mapper>

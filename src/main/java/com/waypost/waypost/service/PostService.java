@@ -1,7 +1,9 @@
 package com.waypost.waypost.service;
 
+import com.waypost.waypost.dto.post.AddCommentReqDto;
 import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
 import com.waypost.waypost.dto.post.UploadPhotoPostReqDto;
+import com.waypost.waypost.entity.Comment;
 import com.waypost.waypost.entity.PhotoPost;
 import com.waypost.waypost.repository.PhotoPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +36,14 @@ public class PostService {
 
     public List<PhotoPost> getPhotoPostListByUserId(int userId) {
         return photoPostRepository.getPhotoPostListByUserId(userId);
+    }
+
+    public int addComment(AddCommentReqDto addCommentReqDto) {
+        Comment comment = Comment.builder()
+                .photoPostId(addCommentReqDto.getPhotoPostId())
+                .userId(addCommentReqDto.getUserId())
+                .content(addCommentReqDto.getContent())
+                .build();
+        return photoPostRepository.addComment(comment);
     }
 }
