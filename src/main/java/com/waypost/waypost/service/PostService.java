@@ -46,4 +46,8 @@ public class PostService {
                 .build();
         return photoPostRepository.addComment(comment);
     }
+
+    public int removePostByPhotoPostId(int photoPostId) {
+        return photoPostRepository.removePostByPhotoPostId(photoPostId);
+    }
 }

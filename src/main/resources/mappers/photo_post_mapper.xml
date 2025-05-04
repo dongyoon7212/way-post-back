@@ -150,4 +150,11 @@
         ORDER BY
             c.reg_dt ASC
     </select>
+
+    <delete id="removePostByPhotoPostId" parameterType="int" >
+        DELETE FROM
+            photo_post_tb
+        WHERE
+            photo_post_id = #{photoPostId}
+    </delete>
 </mapper>

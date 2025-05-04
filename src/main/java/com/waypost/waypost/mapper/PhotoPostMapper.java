@@ -13,4 +13,5 @@ public interface PhotoPostMapper {
     public List<PhotoPost> getPhotoPostList(GetPhotoPostListReqDto getPhotoPostListReqDto);
     public List<PhotoPost> getPhotoPostListByUserId(int userId);
     public int addComment(Comment comment);
+    public int removePostByPhotoPostId(int photoPostId);
 }

@@ -40,4 +40,9 @@ public class PostController {
         return ResponseEntity.ok(postService.addComment(addCommentReqDto));
     }
 
+    @PostMapping("/photo/remove/{photoPostId}")
+    public ResponseEntity<?> removePostByPhotoPostId(@PathVariable int photoPostId) {
+        return ResponseEntity.ok().body(postService.removePostByPhotoPostId(photoPostId));
+    }
+
 }

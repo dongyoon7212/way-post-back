@@ -31,4 +31,8 @@ public class PhotoPostRepository {
     public int addComment(Comment comment) {
         return photoPostMapper.addComment(comment);
     }
+
+    public int removePostByPhotoPostId(int photoPostId) {
+        return photoPostMapper.removePostByPhotoPostId(photoPostId);
+    }
 }
