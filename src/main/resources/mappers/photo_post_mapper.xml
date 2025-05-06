@@ -76,10 +76,20 @@
             p.upd_dt,
             u.email,
             u.username,
-            u.profile_img
+            u.profile_img,
+            c.comment_id,
+            c.photo_post_id,
+            c.user_id,
+            c.content,
+            c.reg_dt,
+            c.upd_dt,
+            cu.username,
+            cu.profile_img
         from
             photo_post_tb p
             left join user_tb u on p.user_id = u.user_id
+            left join comment_tb c on p.photo_post_id = c.photo_post_id
+            left join user_tb cu on c.user_id = cu.user_id
         where
             p.latitude  BETWEEN #{minLat} and #{maxLat}
             and p.longitude BETWEEN #{minLng} and #{maxLng}
