@@ -64,7 +64,7 @@
         )
     </insert>
 
-    <select id="getPhotoPostList" parameterType="map" resultMap="PhotoPostResultMap">
+    <select id="getPhotoPostList" resultMap="PhotoPostResultMap">
         select
             p.photo_post_id,
             p.user_id,
@@ -72,6 +72,27 @@
             p.img_url,
             p.camera_model,
             p.location_address,
+            <choose>
+                <when test="currentUserId != null">
+                    CASE
+                    WHEN EXISTS(
+                    SELECT 1
+                    FROM photo_post_like_tb plt
+                    WHERE plt.photo_post_id = p.photo_post_id
+                    AND plt.user_id      = #{currentUserId}
+                    ) THEN 1
+                    ELSE 0
+                    END AS is_liked,
+                </when>
+                <otherwise>
+                    0 AS is_liked,
+                </otherwise>
+            </choose>
+            (
+            SELECT COUNT(*)
+            FROM photo_post_like_tb pl
+            WHERE pl.photo_post_id = p.photo_post_id
+            ) AS like_count,
             p.latitude,
             p.longitude,
             p.reg_dt,
@@ -93,8 +114,8 @@
             left join comment_tb c on p.photo_post_id = c.photo_post_id
             left join user_tb cu on c.user_id = cu.user_id
         where
-            p.latitude  BETWEEN #{minLat} and #{maxLat}
-            and p.longitude BETWEEN #{minLng} and #{maxLng}
+            p.latitude BETWEEN #{getPhotoPostListReqDto.minLat} and #{getPhotoPostListReqDto.maxLat}
+            and p.longitude BETWEEN #{getPhotoPostListReqDto.minLng} and #{getPhotoPostListReqDto.maxLng}
     </select>
 
     <select id="getPhotoPostListByUserId" resultType="map" resultMap="PhotoPostResultMap">

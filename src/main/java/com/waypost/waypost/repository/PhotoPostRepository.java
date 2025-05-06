@@ -25,13 +25,11 @@ public class PhotoPostRepository {
         return photoPostMapper.uploadPhotoPost(photoPost);
     }
 
-    public List<PhotoPost> getPhotoPostList(GetPhotoPostListReqDto getPhotoPostListReqDto) {
-        return photoPostMapper.getPhotoPostList(getPhotoPostListReqDto);
+    public List<PhotoPost> getPhotoPostList(GetPhotoPostListReqDto getPhotoPostListReqDto, Integer currentUserId) {
+        return photoPostMapper.getPhotoPostList(getPhotoPostListReqDto, currentUserId);
     }
 
     public List<PhotoPost> getPhotoPostListByUserId(int userId, Integer currentUserId) {
-        System.out.println(userId);
-        System.out.println(currentUserId);
         return photoPostMapper.getPhotoPostListByUserId(userId, currentUserId);
     }
 

@@ -24,13 +24,23 @@ public class PostController {
     }
 
     @GetMapping("/photo/getlist")
-    public ResponseEntity<?> getPhotoPostList(@RequestParam double minLat, @RequestParam double maxLat, @RequestParam double minLng, @RequestParam double maxLng) {
-        return ResponseEntity.ok().body(postService.getPhotoPostList(GetPhotoPostListReqDto.builder()
-                .minLat(minLat)
-                .maxLat(maxLat)
-                .minLng(minLng)
-                .maxLng(maxLng)
-                .build()));
+    public ResponseEntity<?> getPhotoPostList(@RequestParam double minLat, @RequestParam double maxLat, @RequestParam double minLng, @RequestParam double maxLng, @AuthenticationPrincipal PrincipalUser principalUser) {
+        if (principalUser != null) {
+            return ResponseEntity.ok().body(postService.getPhotoPostList(GetPhotoPostListReqDto.builder()
+                    .minLat(minLat)
+                    .maxLat(maxLat)
+                    .minLng(minLng)
+                    .maxLng(maxLng)
+                    .build(), principalUser.getUser().getUserId()));
+        }
+        else {
+            return ResponseEntity.ok().body(postService.getPhotoPostList(GetPhotoPostListReqDto.builder()
+                    .minLat(minLat)
+                    .maxLat(maxLat)
+                    .minLng(minLng)
+                    .maxLng(maxLng)
+                    .build(), null));
+        }
     }
 
     @GetMapping("/photo/getlist/{userId}")
