@@ -13,6 +13,8 @@
         <result property="imgUrl" column="img_url" />
         <result property="cameraModel" column="camera_model" />
         <result property="locationAddress" column="location_address" />
+        <result property="isLiked" column="is_liked" />
+        <result property="likeCount" column="like_count" />
         <result property="latitude" column="latitude" />
         <result property="longitude" column="longitude" />
         <result property="location" column="location" typeHandler="com.waypost.waypost.mybatis.PointTypeHandler" />
@@ -103,6 +105,27 @@
             p.img_url,
             p.camera_model,
             p.location_address,
+            <choose>
+                <when test="currentUserId != null">
+                    CASE
+                    WHEN EXISTS(
+                    SELECT 1
+                    FROM photo_post_like_tb plt
+                    WHERE plt.photo_post_id = p.photo_post_id
+                    AND plt.user_id      = #{currentUserId}
+                    ) THEN 1
+                    ELSE 0
+                    END AS is_liked,
+                </when>
+                <otherwise>
+                    0 AS is_liked,
+                </otherwise>
+            </choose>
+            (
+            SELECT COUNT(*)
+            FROM photo_post_like_tb pl
+            WHERE pl.photo_post_id = p.photo_post_id
+            ) AS like_count,
             p.latitude,
             p.longitude,
             p.reg_dt,
@@ -123,7 +146,6 @@
             left join user_tb u on p.user_id = u.user_id
             left join comment_tb c on p.photo_post_id = c.photo_post_id
             left join user_tb cu on c.user_id = cu.user_id
-
         where
             p.user_id = #{userId}
         order by

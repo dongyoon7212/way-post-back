@@ -1,9 +1,11 @@
 package com.waypost.waypost.repository;
 
 import com.waypost.waypost.dto.post.AddCommentReqDto;
+import com.waypost.waypost.dto.post.AddLikeReqDto;
 import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
 import com.waypost.waypost.entity.Comment;
 import com.waypost.waypost.entity.PhotoPost;
+import com.waypost.waypost.mapper.PhotoPostLikeMapper;
 import com.waypost.waypost.mapper.PhotoPostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,9 @@ public class PhotoPostRepository {
     @Autowired
     private PhotoPostMapper photoPostMapper;
 
+    @Autowired
+    private PhotoPostLikeMapper photoPostLikeMapper;
+
     public int uploadPhotoPost(PhotoPost photoPost) {
         return photoPostMapper.uploadPhotoPost(photoPost);
     }
@@ -24,8 +29,10 @@ public class PhotoPostRepository {
         return photoPostMapper.getPhotoPostList(getPhotoPostListReqDto);
     }
 
-    public List<PhotoPost> getPhotoPostListByUserId(int userId) {
-        return photoPostMapper.getPhotoPostListByUserId(userId);
+    public List<PhotoPost> getPhotoPostListByUserId(int userId, Integer currentUserId) {
+        System.out.println(userId);
+        System.out.println(currentUserId);
+        return photoPostMapper.getPhotoPostListByUserId(userId, currentUserId);
     }
 
     public int addComment(Comment comment) {
@@ -34,5 +41,13 @@ public class PhotoPostRepository {
 
     public int removePostByPhotoPostId(int photoPostId) {
         return photoPostMapper.removePostByPhotoPostId(photoPostId);
+    }
+
+    public int addLike(AddLikeReqDto addLikeReqDto) {
+        return photoPostLikeMapper.addLike(addLikeReqDto.getUserId(), addLikeReqDto.getPhotoPostId());
+    }
+
+    public int removeLike(AddLikeReqDto addLikeReqDto) {
+        return photoPostLikeMapper.removeLike(addLikeReqDto.getUserId(), addLikeReqDto.getPhotoPostId());
     }
 }

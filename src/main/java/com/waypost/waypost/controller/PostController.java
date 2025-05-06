@@ -1,11 +1,14 @@
 package com.waypost.waypost.controller;
 
 import com.waypost.waypost.dto.post.AddCommentReqDto;
+import com.waypost.waypost.dto.post.AddLikeReqDto;
 import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
 import com.waypost.waypost.dto.post.UploadPhotoPostReqDto;
+import com.waypost.waypost.security.principal.PrincipalUser;
 import com.waypost.waypost.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,8 +34,13 @@ public class PostController {
     }
 
     @GetMapping("/photo/getlist/{userId}")
-    public ResponseEntity<?> getPhotoPostListByUserId(@PathVariable int userId) {
-        return ResponseEntity.ok().body(postService.getPhotoPostListByUserId(userId));
+    public ResponseEntity<?> getPhotoPostListByUserId(@PathVariable int userId, @AuthenticationPrincipal PrincipalUser principalUser) {
+        if (principalUser != null) {
+            return ResponseEntity.ok().body(postService.getPhotoPostListByUserId(userId, principalUser.getUser().getUserId()));
+        }
+        else {
+            return ResponseEntity.ok().body(postService.getPhotoPostListByUserId(userId, null));
+        }
     }
 
     @PostMapping("/photo/comment/add")
@@ -43,6 +51,16 @@ public class PostController {
     @PostMapping("/photo/remove/{photoPostId}")
     public ResponseEntity<?> removePostByPhotoPostId(@PathVariable int photoPostId) {
         return ResponseEntity.ok().body(postService.removePostByPhotoPostId(photoPostId));
+    }
+
+    @PostMapping("/photo/like/add")
+    public ResponseEntity<?> addLike(@RequestBody AddLikeReqDto addLikeReqDto) {
+        return ResponseEntity.ok(postService.addLike(addLikeReqDto));
+    }
+
+    @PostMapping("/photo/like/remove")
+    public ResponseEntity<?> removeLike(@RequestBody AddLikeReqDto addLikeReqDto) {
+        return ResponseEntity.ok(postService.removeLike(addLikeReqDto));
     }
 
 }

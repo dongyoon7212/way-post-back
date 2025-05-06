@@ -11,7 +11,7 @@ import java.util.List;
 public interface PhotoPostMapper {
     public int uploadPhotoPost(PhotoPost photoPost);
     public List<PhotoPost> getPhotoPostList(GetPhotoPostListReqDto getPhotoPostListReqDto);
-    public List<PhotoPost> getPhotoPostListByUserId(int userId);
+    public List<PhotoPost> getPhotoPostListByUserId(int userId, Integer currentUserId);
     public int addComment(Comment comment);
     public int removePostByPhotoPostId(int photoPostId);
 }

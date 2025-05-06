@@ -20,6 +20,8 @@ public class PhotoPost {
     private String imgUrl;
     private String cameraModel;
     private String locationAddress;
+    private int isLiked;
+    private int likeCount;
     private double latitude;
     private double longitude;
     private Point location;

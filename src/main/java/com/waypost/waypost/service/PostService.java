@@ -1,6 +1,7 @@
 package com.waypost.waypost.service;
 
 import com.waypost.waypost.dto.post.AddCommentReqDto;
+import com.waypost.waypost.dto.post.AddLikeReqDto;
 import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
 import com.waypost.waypost.dto.post.UploadPhotoPostReqDto;
 import com.waypost.waypost.entity.Comment;
@@ -34,8 +35,8 @@ public class PostService {
         return photoPostRepository.getPhotoPostList(getPhotoPostListReqDto);
     }
 
-    public List<PhotoPost> getPhotoPostListByUserId(int userId) {
-        return photoPostRepository.getPhotoPostListByUserId(userId);
+    public List<PhotoPost> getPhotoPostListByUserId(int userId, Integer currentUserId) {
+        return photoPostRepository.getPhotoPostListByUserId(userId, currentUserId);
     }
 
     public int addComment(AddCommentReqDto addCommentReqDto) {
@@ -49,5 +50,13 @@ public class PostService {
 
     public int removePostByPhotoPostId(int photoPostId) {
         return photoPostRepository.removePostByPhotoPostId(photoPostId);
+    }
+
+    public int addLike(AddLikeReqDto addLikeReqDto) {
+        return photoPostRepository.addLike(addLikeReqDto);
+    }
+
+    public int removeLike(AddLikeReqDto addLikeReqDto) {
+        return photoPostRepository.removeLike(addLikeReqDto);
     }
 }
