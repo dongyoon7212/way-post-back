@@ -48,4 +48,8 @@ public class PhotoPostRepository {
     public int removeLike(AddLikeReqDto addLikeReqDto) {
         return photoPostLikeMapper.removeLike(addLikeReqDto.getUserId(), addLikeReqDto.getPhotoPostId());
     }
+
+    public List<PhotoPost> getHotPhotoPostList(Integer currentUserId) {
+        return photoPostMapper.getHotPhotoPostList(currentUserId);
+    }
 }

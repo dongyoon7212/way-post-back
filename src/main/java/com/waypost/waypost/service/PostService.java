@@ -59,4 +59,8 @@ public class PostService {
     public int removeLike(AddLikeReqDto addLikeReqDto) {
         return photoPostRepository.removeLike(addLikeReqDto);
     }
+
+    public List<PhotoPost> getHotPhotoPostList(Integer currentUserId) {
+        return photoPostRepository.getHotPhotoPostList(currentUserId);
+    }
 }

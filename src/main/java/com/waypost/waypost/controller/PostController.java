@@ -23,7 +23,7 @@ public class PostController {
         return ResponseEntity.ok(postService.uploadPhotoPost(uploadPhotoPostReqDto));
     }
 
-    @GetMapping("/photo/getlist")
+    @GetMapping("/photo/getList")
     public ResponseEntity<?> getPhotoPostList(@RequestParam double minLat, @RequestParam double maxLat, @RequestParam double minLng, @RequestParam double maxLng, @AuthenticationPrincipal PrincipalUser principalUser) {
         if (principalUser != null) {
             return ResponseEntity.ok().body(postService.getPhotoPostList(GetPhotoPostListReqDto.builder()
@@ -43,7 +43,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("/photo/getlist/{userId}")
+    @GetMapping("/photo/getList/{userId}")
     public ResponseEntity<?> getPhotoPostListByUserId(@PathVariable int userId, @AuthenticationPrincipal PrincipalUser principalUser) {
         if (principalUser != null) {
             return ResponseEntity.ok().body(postService.getPhotoPostListByUserId(userId, principalUser.getUser().getUserId()));
@@ -71,6 +71,16 @@ public class PostController {
     @PostMapping("/photo/like/remove")
     public ResponseEntity<?> removeLike(@RequestBody AddLikeReqDto addLikeReqDto) {
         return ResponseEntity.ok(postService.removeLike(addLikeReqDto));
+    }
+
+    @GetMapping("/photo/getList/hot")
+    public ResponseEntity<?> getHotPhotoPostList(@AuthenticationPrincipal PrincipalUser principalUser) {
+        if (principalUser != null) {
+            return ResponseEntity.ok().body(postService.getHotPhotoPostList(principalUser.getUser().getUserId()));
+        }
+        else {
+            return ResponseEntity.ok().body(postService.getHotPhotoPostList(null));
+        }
     }
 
 }
