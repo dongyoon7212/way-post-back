@@ -14,5 +14,6 @@ public interface UserMapper {
     User findByUsername(String username);
     User findByUserId(int userId);
     int editProfileImg(int userId, String profileImg);
+    int editIntroduce(String introduce, Integer userId);
 
 }

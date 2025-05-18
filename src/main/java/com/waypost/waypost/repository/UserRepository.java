@@ -39,4 +39,8 @@ public class UserRepository {
     public int editProfileImg(EditProfileImgReqDto editProfileImgReqDto) {
         return userMapper.editProfileImg(editProfileImgReqDto.getUserId(), editProfileImgReqDto.getProfileImg());
     }
+
+    public int editIntroduce(String introduce, Integer userId) {
+        return userMapper.editIntroduce(introduce, userId);
+    }
 }

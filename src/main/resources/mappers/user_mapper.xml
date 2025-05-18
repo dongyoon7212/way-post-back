@@ -78,7 +78,17 @@
         update
             user_tb
         set
-            profile_img = #{profileImg}
+            profile_img = #{profileImg},
+            upd_dt = now()
+        where
+            user_id = #{userId}
+    </update>
+
+    <update id="editIntroduce">
+        update
+            user_tb
+        set
+            introduce = #{introduce},
             upd_dt = now()
         where
             user_id = #{userId}

@@ -27,4 +27,8 @@ public class AccountService {
         return userRepository.editProfileImg(editProfileImgReqDto);
     }
 
+    public int editIntroduce(String introduce, Integer userId) {
+        return userRepository.editIntroduce(introduce, userId);
+    }
+
 }
