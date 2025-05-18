@@ -1,5 +1,6 @@
 package com.waypost.waypost.mapper;
 
+import com.waypost.waypost.dto.post.GetPhotoPostListByPositionReqDto;
 import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
 import com.waypost.waypost.entity.Comment;
 import com.waypost.waypost.entity.PhotoPost;
@@ -15,4 +16,5 @@ public interface PhotoPostMapper {
     public int addComment(Comment comment);
     public int removePostByPhotoPostId(int photoPostId);
     public List<PhotoPost> getHotPhotoPostList(Integer currentUserId);
+    public List<PhotoPost> getPhotoPostListByPosition(GetPhotoPostListByPositionReqDto getPhotoPostListByPositionReqDto, Integer currentUserId);
 }

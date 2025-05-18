@@ -1,9 +1,6 @@
 package com.waypost.waypost.controller;
 
-import com.waypost.waypost.dto.post.AddCommentReqDto;
-import com.waypost.waypost.dto.post.AddLikeReqDto;
-import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
-import com.waypost.waypost.dto.post.UploadPhotoPostReqDto;
+import com.waypost.waypost.dto.post.*;
 import com.waypost.waypost.security.principal.PrincipalUser;
 import com.waypost.waypost.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +77,22 @@ public class PostController {
         }
         else {
             return ResponseEntity.ok().body(postService.getHotPhotoPostList(null));
+        }
+    }
+
+    @GetMapping("/photo/getList/position")
+    public ResponseEntity<?> getPhotoPostListByPosition(@RequestParam double latitude, @RequestParam double longitude, @AuthenticationPrincipal PrincipalUser principalUser) {
+        if (principalUser != null) {
+            return ResponseEntity.ok().body(postService.getPhotoPostListByPosition(GetPhotoPostListByPositionReqDto.builder()
+                            .latitude(latitude)
+                            .longitude(longitude)
+                            .build(), principalUser.getUser().getUserId()));
+        }
+        else {
+            return ResponseEntity.ok().body(postService.getPhotoPostListByPosition(GetPhotoPostListByPositionReqDto.builder()
+                    .latitude(latitude)
+                    .longitude(longitude)
+                    .build(), null));
         }
     }
 

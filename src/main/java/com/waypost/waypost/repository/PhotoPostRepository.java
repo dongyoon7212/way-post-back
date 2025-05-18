@@ -2,6 +2,7 @@ package com.waypost.waypost.repository;
 
 import com.waypost.waypost.dto.post.AddCommentReqDto;
 import com.waypost.waypost.dto.post.AddLikeReqDto;
+import com.waypost.waypost.dto.post.GetPhotoPostListByPositionReqDto;
 import com.waypost.waypost.dto.post.GetPhotoPostListReqDto;
 import com.waypost.waypost.entity.Comment;
 import com.waypost.waypost.entity.PhotoPost;
@@ -51,5 +52,9 @@ public class PhotoPostRepository {
 
     public List<PhotoPost> getHotPhotoPostList(Integer currentUserId) {
         return photoPostMapper.getHotPhotoPostList(currentUserId);
+    }
+
+    public List<PhotoPost> getPhotoPostListByPosition(GetPhotoPostListByPositionReqDto getPhotoPostListByPositionReqDto, Integer currentUserId) {
+        return photoPostMapper.getPhotoPostListByPosition(getPhotoPostListByPositionReqDto, currentUserId);
     }
 }
