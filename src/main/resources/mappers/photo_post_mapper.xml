@@ -212,13 +212,91 @@
     </delete>
 
     <select id="getHotPhotoPostList" resultMap="PhotoPostResultMap">
-        select
+        SELECT
             p.photo_post_id,
             p.user_id,
             p.post_text,
             p.img_url,
             p.camera_model,
             p.location_address,
+            p.is_liked,
+            p.like_count,
+            p.latitude,
+            p.longitude,
+            p.reg_dt,
+            p.upd_dt,
+            u.email,
+            u.username,
+            u.profile_img,
+            c.comment_id,
+            c.photo_post_id,
+            c.user_id,
+            c.content,
+            c.reg_dt,
+            c.upd_dt,
+            cu.username,
+            cu.profile_img
+            FROM (
+            <!-- 1) 좋아요 순으로 정렬한 상위 10개 게시물만 먼저 추출 -->
+            SELECT
+            p.photo_post_id,
+            p.user_id,
+            p.post_text,
+            p.img_url,
+            p.camera_model,
+            p.location_address,
+
+            <!-- 로그인했다면 내가 좋아요했는지 -->
+            <choose>
+                <when test="currentUserId != null">
+                    CASE
+                    WHEN EXISTS(
+                    SELECT 1
+                    FROM photo_post_like_tb plt
+                    WHERE plt.photo_post_id = p.photo_post_id
+                    AND plt.user_id      = #{currentUserId}
+                    ) THEN 1
+                    ELSE 0
+                    END
+                </when>
+                <otherwise>
+                    0
+                </otherwise>
+            </choose>
+            AS is_liked,
+
+            <!-- 게시물별 전체 좋아요 개수 -->
+            (
+                SELECT COUNT(*)
+                FROM photo_post_like_tb pl
+                WHERE pl.photo_post_id = p.photo_post_id
+            )
+            AS like_count,
+
+            p.latitude,
+            p.longitude,
+            p.reg_dt,
+            p.upd_dt
+        FROM photo_post_tb p
+        ORDER BY like_count DESC
+        LIMIT 10
+        ) p
+        <!-- 2) 위에서 뽑은 10개 게시물에 댓글·유저 정보 LEFT JOIN -->
+        LEFT JOIN user_tb    u  ON p.user_id       = u.user_id
+        LEFT JOIN comment_tb c  ON p.photo_post_id = c.photo_post_id
+        LEFT JOIN user_tb    cu ON c.user_id       = cu.user_id
+    </select>
+
+    <select id="getRecentPhotoPostList" resultMap="PhotoPostResultMap">
+        SELECT
+            p.photo_post_id,
+            p.user_id,
+            p.post_text,
+            p.img_url,
+            p.camera_model,
+            p.location_address,
+
+            <!-- 로그인 했을 때만 나의 좋아요 여부 계산 -->
             <choose>
                 <when test="currentUserId != null">
                     CASE
@@ -235,11 +313,14 @@
                     0 AS is_liked,
                 </otherwise>
             </choose>
+
+            <!-- 게시물별 전체 좋아요 개수 -->
             (
                 SELECT COUNT(*)
                 FROM photo_post_like_tb pl
                 WHERE pl.photo_post_id = p.photo_post_id
             ) AS like_count,
+
             p.latitude,
             p.longitude,
             p.reg_dt,
@@ -255,13 +336,26 @@
             c.upd_dt,
             cu.username,
             cu.profile_img
-        from
-            photo_post_tb p
-            left join user_tb u on p.user_id = u.user_id
-            left join comment_tb c on p.photo_post_id = c.photo_post_id
-            left join user_tb cu on c.user_id = cu.user_id
-        order by like_count DESC
-        limit 10
+        FROM (
+            SELECT
+            photo_post_id,
+            user_id,
+            post_text,
+            img_url,
+            camera_model,
+            location_address,
+            latitude,
+            longitude,
+            reg_dt,
+            upd_dt
+            FROM photo_post_tb
+            ORDER BY reg_dt DESC
+            LIMIT 10
+        ) p
+
+        LEFT JOIN user_tb      u  ON p.user_id       = u.user_id
+        LEFT JOIN comment_tb   c  ON p.photo_post_id = c.photo_post_id
+        LEFT JOIN user_tb      cu ON c.user_id       = cu.user_id
     </select>
 
     <select id="getPhotoPostListByPosition" resultMap="PhotoPostResultMap">

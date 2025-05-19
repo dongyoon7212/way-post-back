@@ -54,6 +54,10 @@ public class PhotoPostRepository {
         return photoPostMapper.getHotPhotoPostList(currentUserId);
     }
 
+    public List<PhotoPost> getRecentPhotoPostList(Integer currentUserId) {
+        return photoPostMapper.getRecentPhotoPostList(currentUserId);
+    }
+
     public List<PhotoPost> getPhotoPostListByPosition(GetPhotoPostListByPositionReqDto getPhotoPostListByPositionReqDto, Integer currentUserId) {
         return photoPostMapper.getPhotoPostListByPosition(getPhotoPostListByPositionReqDto, currentUserId);
     }

@@ -61,6 +61,10 @@ public class PostService {
         return photoPostRepository.getHotPhotoPostList(currentUserId);
     }
 
+    public List<PhotoPost> getRecentPhotoPostList(Integer currentUserId) {
+        return photoPostRepository.getRecentPhotoPostList(currentUserId);
+    }
+
     public List<PhotoPost> getPhotoPostListByPosition(GetPhotoPostListByPositionReqDto getPhotoPostListByPositionReqDto, Integer currentUserId) {
         return photoPostRepository.getPhotoPostListByPosition(getPhotoPostListByPositionReqDto, currentUserId);
     }

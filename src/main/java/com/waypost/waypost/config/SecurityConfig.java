@@ -60,6 +60,7 @@ public class SecurityConfig {
                                 "/account/get/user",
                                 "/post/photo/getList/{userId}",
                                 "/post/photo/getList/hot",
+                                "/post/photo/getList/recent",
                                 "/post/photo/getList/position"
                         )
                         .permitAll()

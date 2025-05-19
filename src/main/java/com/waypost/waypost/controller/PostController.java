@@ -80,6 +80,15 @@ public class PostController {
         }
     }
 
+    @GetMapping("/photo/getList/recent")
+    public ResponseEntity<?> getRecentPhotoPostList(@AuthenticationPrincipal PrincipalUser principalUser) {
+        if(principalUser != null) {
+            return ResponseEntity.ok().body(postService.getRecentPhotoPostList(principalUser.getUser().getUserId()));
+        } else {
+            return ResponseEntity.ok().body(postService.getRecentPhotoPostList(null));
+        }
+    }
+
     @GetMapping("/photo/getList/position")
     public ResponseEntity<?> getPhotoPostListByPosition(@RequestParam double latitude, @RequestParam double longitude, @AuthenticationPrincipal PrincipalUser principalUser) {
         if (principalUser != null) {
