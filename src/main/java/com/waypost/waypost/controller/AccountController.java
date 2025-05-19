@@ -1,5 +1,6 @@
 package com.waypost.waypost.controller;
 
+import com.waypost.waypost.dto.account.EditIntroduceReqDto;
 import com.waypost.waypost.dto.account.EditProfileImgReqDto;
 import com.waypost.waypost.dto.post.GetPhotoPostListByPositionReqDto;
 import com.waypost.waypost.security.principal.PrincipalUser;
@@ -28,12 +29,12 @@ public class AccountController {
     }
 
     @PostMapping("/edit/introduce")
-    public ResponseEntity<?> editIntroduce(@RequestBody String introduce, @AuthenticationPrincipal PrincipalUser principalUser) {
+    public ResponseEntity<?> editIntroduce(@RequestBody EditIntroduceReqDto editIntroduceReqDto, @AuthenticationPrincipal PrincipalUser principalUser) {
         if (principalUser != null) {
-            return ResponseEntity.ok().body(accountService.editIntroduce(introduce, principalUser.getUser().getUserId()));
+            return ResponseEntity.ok().body(accountService.editIntroduce(editIntroduceReqDto.getIntroduce(), principalUser.getUser().getUserId()));
         }
         else {
-            return ResponseEntity.ok().body(accountService.editIntroduce(introduce, null));
+            return ResponseEntity.ok().body(accountService.editIntroduce(editIntroduceReqDto.getIntroduce(), null));
         }
     }
 }
