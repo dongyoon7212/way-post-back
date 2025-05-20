@@ -13,6 +13,7 @@
         <result property="username" column="username" />
         <result property="profileImg" column="profile_img" />
         <result property="introduce" column="introduce" />
+        <result property="isFollowed" column="is_followed" />
         <result property="regDt" column="reg_dt" />
         <result property="updDt" column="upd_dt" />
         <result property="isAccountNonExpired" column="account_expired" />
@@ -67,7 +68,26 @@
             email,
             username,
             profile_img,
-            introduce
+            introduce,
+            <!-- 로그인 했을 때만 팔로우 여부 계산 -->
+            <choose>
+                <when test="currentUserId != null">
+                    CASE
+                    WHEN EXISTS (
+                    SELECT 1
+                    FROM user_follow_tb uf
+                    WHERE uf.follower_id = #{currentUserId}
+                    AND uf.followee_id = #{userId}
+                    )
+                    THEN 1
+                    ELSE 0
+                    END
+                </when>
+                <otherwise>
+                    0
+                </otherwise>
+            </choose>
+            AS is_followed
         from
             user_tb
         where
@@ -91,7 +111,8 @@
             introduce = #{introduce},
             upd_dt = now()
         where
-            user_id = #{userId}
+            user_id = #{currentUserId}
     </update>
+
 
 </mapper>

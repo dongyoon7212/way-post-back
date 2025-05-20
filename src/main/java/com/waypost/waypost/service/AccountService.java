@@ -14,8 +14,8 @@ public class AccountService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<User> getUserById(int userId) {
-        Optional<User> user = userRepository.findByUserId(userId);
+    public Optional<User> getUserById(int userId, Integer currentUserId) {
+        Optional<User> user = userRepository.findByUserId(userId, currentUserId);
         if (user.isEmpty()) {
             return user;
         } else {
@@ -27,8 +27,16 @@ public class AccountService {
         return userRepository.editProfileImg(editProfileImgReqDto);
     }
 
-    public int editIntroduce(String introduce, Integer userId) {
-        return userRepository.editIntroduce(introduce, userId);
+    public int editIntroduce(String introduce, Integer currentUserId) {
+        return userRepository.editIntroduce(introduce, currentUserId);
+    }
+
+    public int follow(Integer currentUserId, int followeeId) {
+        return userRepository.follow(currentUserId, followeeId);
+    }
+
+    public int unfollow(Integer currentUserId, int followeeId) {
+        return userRepository.unfollow(currentUserId, followeeId);
     }
 
 }

@@ -2,6 +2,7 @@ package com.waypost.waypost.repository;
 
 import com.waypost.waypost.dto.account.EditProfileImgReqDto;
 import com.waypost.waypost.entity.User;
+import com.waypost.waypost.mapper.UserFollowMapper;
 import com.waypost.waypost.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -15,6 +16,9 @@ public class UserRepository {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserFollowMapper userFollowMapper;
+
     public Optional<User> save(User user) {
         try {
             userMapper.insert(user);
@@ -24,8 +28,8 @@ public class UserRepository {
         return Optional.of(user);
     }
 
-    public Optional<User> findByUserId(int userId) {
-        return Optional.ofNullable(userMapper.findByUserId(userId));
+    public Optional<User> findByUserId(int userId, Integer currentUserId) {
+        return Optional.ofNullable(userMapper.findByUserId(userId, currentUserId));
     }
 
     public Optional<User> findByEmail(String email) {
@@ -40,7 +44,15 @@ public class UserRepository {
         return userMapper.editProfileImg(editProfileImgReqDto.getUserId(), editProfileImgReqDto.getProfileImg());
     }
 
-    public int editIntroduce(String introduce, Integer userId) {
-        return userMapper.editIntroduce(introduce, userId);
+    public int editIntroduce(String introduce, Integer currentUserId) {
+        return userMapper.editIntroduce(introduce, currentUserId);
+    }
+
+    public int follow(Integer currentUserId, int followeeId) {
+        return userFollowMapper.follow(currentUserId, followeeId);
+    }
+
+    public int unfollow(Integer currentUserId, int followeeId) {
+        return userFollowMapper.unfollow(currentUserId, followeeId);
     }
 }

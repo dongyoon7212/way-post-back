@@ -2,6 +2,7 @@ package com.waypost.waypost.controller;
 
 import com.waypost.waypost.dto.account.EditIntroduceReqDto;
 import com.waypost.waypost.dto.account.EditProfileImgReqDto;
+import com.waypost.waypost.dto.account.FollowAddReqDto;
 import com.waypost.waypost.dto.post.GetPhotoPostListByPositionReqDto;
 import com.waypost.waypost.security.principal.PrincipalUser;
 import com.waypost.waypost.service.AccountService;
@@ -24,8 +25,12 @@ public class AccountController {
     }
 
     @GetMapping("/get/user")
-    public ResponseEntity<?> getUserById(@RequestParam int userId) {
-        return ResponseEntity.ok().body(accountService.getUserById(userId));
+    public ResponseEntity<?> getUserById(@RequestParam int userId, @AuthenticationPrincipal PrincipalUser principalUser) {
+        if (principalUser != null) {
+            return ResponseEntity.ok().body(accountService.getUserById(userId, principalUser.getUser().getUserId()));
+        } else {
+            return ResponseEntity.ok().body(accountService.getUserById(userId, null));
+        }
     }
 
     @PostMapping("/edit/introduce")
@@ -36,5 +41,15 @@ public class AccountController {
         else {
             return ResponseEntity.ok().body(accountService.editIntroduce(editIntroduceReqDto.getIntroduce(), null));
         }
+    }
+
+    @PostMapping("/follow/add")
+    public ResponseEntity<?> follow(@AuthenticationPrincipal PrincipalUser principalUser, @RequestBody FollowAddReqDto followAddReqDto) {
+        return ResponseEntity.ok().body(accountService.follow(principalUser.getUser().getUserId(), followAddReqDto.getFolloweeId()));
+    }
+
+    @PostMapping("/follow/remove")
+    public ResponseEntity<?> unfollow(@AuthenticationPrincipal PrincipalUser principalUser, @RequestBody FollowAddReqDto followAddReqDto) {
+        return ResponseEntity.ok().body(accountService.unfollow(principalUser.getUser().getUserId(), followAddReqDto.getFolloweeId()));
     }
 }

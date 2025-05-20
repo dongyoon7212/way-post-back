@@ -21,6 +21,7 @@ public class User {
     private String username;
     private String profileImg;
     private String introduce;
+    private int isFollowed;
     private LocalDateTime regDt;
     private LocalDateTime updDt;
 
