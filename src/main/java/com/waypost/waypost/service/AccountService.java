@@ -1,6 +1,7 @@
 package com.waypost.waypost.service;
 
 import com.waypost.waypost.dto.account.EditProfileImgReqDto;
+import com.waypost.waypost.dto.auth.FindByUserIdRespDto;
 import com.waypost.waypost.entity.User;
 import com.waypost.waypost.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +15,9 @@ public class AccountService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<User> getUserById(int userId, Integer currentUserId) {
-        Optional<User> user = userRepository.findByUserId(userId, currentUserId);
-        if (user.isEmpty()) {
-            return user;
-        } else {
-            return user;
-        }
+    public Optional<FindByUserIdRespDto> getUserById(int userId, Integer currentUserId) {
+        Optional<FindByUserIdRespDto> findByUserIdRespDto = userRepository.findByUserId(userId, currentUserId);
+        return findByUserIdRespDto;
     }
 
     public int editProfileImg(EditProfileImgReqDto editProfileImgReqDto) {

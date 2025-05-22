@@ -13,7 +13,6 @@
         <result property="username" column="username" />
         <result property="profileImg" column="profile_img" />
         <result property="introduce" column="introduce" />
-        <result property="isFollowed" column="is_followed" />
         <result property="regDt" column="reg_dt" />
         <result property="updDt" column="upd_dt" />
         <result property="isAccountNonExpired" column="account_expired" />
@@ -33,6 +32,13 @@
     <resultMap id="roleResultMap" type="com.waypost.waypost.entity.Role">
         <id property="roleId" column="role_id" />
         <result property="roleName" column="role_name" />
+    </resultMap>
+
+    <resultMap id="FindByUserIdRespDto" type="com.waypost.waypost.dto.auth.FindByUserIdRespDto">
+        <result property="isFollowed" column="is_followed" />
+        <result property="followerCount" column="follower_count" />
+        <result property="followingCount" column="following_count" />
+        <association property="user" resultMap="UserResultMap" />
     </resultMap>
 
     <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
@@ -62,7 +68,7 @@
             username = #{username}
     </select>
 
-    <select id="findByUserId" parameterType="Integer" resultMap="UserResultMap">
+    <select id="findByUserId" parameterType="Integer" resultMap="FindByUserIdRespDto">
         select
             user_id,
             email,
@@ -87,7 +93,16 @@
                     0
                 </otherwise>
             </choose>
-            AS is_followed
+            AS is_followed,
+            ( SELECT COUNT(*)
+            FROM user_follow_tb uf2
+            WHERE uf2.followee_id = user_id
+            ) AS follower_count,
+            <!-- 팔로잉 수 -->
+            ( SELECT COUNT(*)
+            FROM user_follow_tb uf3
+            WHERE uf3.follower_id = user_id
+            ) AS following_count
         from
             user_tb
         where
