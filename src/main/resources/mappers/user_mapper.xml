@@ -15,6 +15,7 @@
         <result property="introduce" column="introduce" />
         <result property="regDt" column="reg_dt" />
         <result property="updDt" column="upd_dt" />
+        <result property="dctvdDt" column="dctvd_dt" />
         <result property="isAccountNonExpired" column="account_expired" />
         <result property="isAccountNonLocked" column="account_locked" />
         <result property="isCredentialsNonExpired" column="credentials_expired" />
@@ -34,7 +35,7 @@
         <result property="roleName" column="role_name" />
     </resultMap>
 
-    <resultMap id="FindByUserIdRespDto" type="com.waypost.waypost.dto.auth.FindByUserIdRespDto">
+    <resultMap id="FindByUserIdRespDto" type="com.waypost.waypost.dto.account.FindByUserIdRespDto">
         <result property="isFollowed" column="is_followed" />
         <result property="followerCount" column="follower_count" />
         <result property="followingCount" column="following_count" />
@@ -75,6 +76,13 @@
             username,
             profile_img,
             introduce,
+            reg_dt,
+            upd_dt,
+            dctvd_dt,
+            account_expired,
+            account_locked,
+            credentials_expired,
+            account_enabled,
             <!-- 로그인 했을 때만 팔로우 여부 계산 -->
             <choose>
                 <when test="currentUserId != null">
@@ -127,6 +135,16 @@
             upd_dt = now()
         where
             user_id = #{currentUserId}
+    </update>
+
+    <update id="deactivateAccount">
+        update
+            user_tb
+        set
+            is_enabled = 0,
+            dctvd_dt = now()
+        where
+            user_id = #{userId}
     </update>
 
 

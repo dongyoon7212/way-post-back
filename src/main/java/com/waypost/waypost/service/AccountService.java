@@ -1,8 +1,7 @@
 package com.waypost.waypost.service;
 
 import com.waypost.waypost.dto.account.EditProfileImgReqDto;
-import com.waypost.waypost.dto.auth.FindByUserIdRespDto;
-import com.waypost.waypost.entity.User;
+import com.waypost.waypost.dto.account.FindByUserIdRespDto;
 import com.waypost.waypost.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

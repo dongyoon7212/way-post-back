@@ -1,4 +1,4 @@
-package com.waypost.waypost.dto.auth;
+package com.waypost.waypost.dto.account;
 
 import com.waypost.waypost.entity.User;
 import lombok.AllArgsConstructor;

@@ -1,5 +1,6 @@
 package com.waypost.waypost.service;
 
+import com.waypost.waypost.dto.auth.DeactivateAccountReqDto;
 import com.waypost.waypost.dto.auth.SignInReqDto;
 import com.waypost.waypost.dto.auth.SignInRespDto;
 import com.waypost.waypost.dto.auth.SignUpReqDto;
@@ -9,8 +10,10 @@ import com.waypost.waypost.entity.UserRole;
 import com.waypost.waypost.repository.UserRepository;
 import com.waypost.waypost.repository.UserRoleRepository;
 import com.waypost.waypost.security.jwt.JwtUtil;
+import com.waypost.waypost.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -83,5 +86,15 @@ public class AuthService {
         return SignInRespDto.builder()
                 .accessToken(accessToken)
                 .build();
+    }
+
+    public int deactivateAccount(DeactivateAccountReqDto deactivateAccountReqDto) {
+        User foundUser = userRepository.findByEmail(deactivateAccountReqDto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 확인하세요."));
+        if (!passwordEncoder.matches(deactivateAccountReqDto.getPassword(), foundUser.getPassword())) {
+            throw new BadCredentialsException("사용자 정보를 확인하세요.");
+        }
+
+        return userRepository.deactivateAccount(foundUser.getUserId());
     }
 }

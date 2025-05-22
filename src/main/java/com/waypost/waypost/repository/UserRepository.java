@@ -1,7 +1,7 @@
 package com.waypost.waypost.repository;
 
 import com.waypost.waypost.dto.account.EditProfileImgReqDto;
-import com.waypost.waypost.dto.auth.FindByUserIdRespDto;
+import com.waypost.waypost.dto.account.FindByUserIdRespDto;
 import com.waypost.waypost.entity.User;
 import com.waypost.waypost.mapper.UserFollowMapper;
 import com.waypost.waypost.mapper.UserMapper;
@@ -55,5 +55,9 @@ public class UserRepository {
 
     public int unfollow(Integer currentUserId, int followeeId) {
         return userFollowMapper.unfollow(currentUserId, followeeId);
+    }
+
+    public int deactivateAccount(Integer userId) {
+        return userMapper.deactivateAccount(userId);
     }
 }

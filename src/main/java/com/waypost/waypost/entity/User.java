@@ -21,10 +21,9 @@ public class User {
     private String username;
     private String profileImg;
     private String introduce;
-//    private int isFollowed;
     private LocalDateTime regDt;
     private LocalDateTime updDt;
-
+    private LocalDateTime dctvdDt; // 탈퇴 시점
     private int isAccountNonExpired;
     private int isAccountNonLocked;
     private int isCredentialsNonExpired;
