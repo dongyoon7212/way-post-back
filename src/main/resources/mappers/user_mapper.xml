@@ -141,7 +141,7 @@
         update
             user_tb
         set
-            is_enabled = 0,
+            account_enabled = 0,
             dctvd_dt = now()
         where
             user_id = #{userId}
