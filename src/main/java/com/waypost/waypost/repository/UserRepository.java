@@ -60,4 +60,8 @@ public class UserRepository {
     public int deactivateAccount(Integer userId) {
         return userMapper.deactivateAccount(userId);
     }
+
+    public int activateAccount(Integer userId) {
+        return userMapper.activateAccount(userId);
+    }
 }

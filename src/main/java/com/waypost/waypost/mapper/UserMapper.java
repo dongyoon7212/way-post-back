@@ -14,5 +14,6 @@ public interface UserMapper {
     int editProfileImg(int userId, String profileImg);
     int editIntroduce(String introduce, Integer currentUserId);
     int deactivateAccount(Integer userId);
+    int activateAccount(Integer userId);
 
 }

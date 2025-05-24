@@ -142,7 +142,19 @@
             user_tb
         set
             account_enabled = 0,
-            dctvd_dt = now()
+            dctvd_dt = now(),
+            upd_dt = now()
+        where
+            user_id = #{userId}
+    </update>
+
+    <update id="activateAccount">
+        update
+            user_tb
+        set
+            account_enabled = 1,
+            dctvd_dt = NULL,
+            upd_dt = now()
         where
             user_id = #{userId}
     </update>

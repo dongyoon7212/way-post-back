@@ -1,9 +1,6 @@
 package com.waypost.waypost.service;
 
-import com.waypost.waypost.dto.auth.DeactivateAccountReqDto;
-import com.waypost.waypost.dto.auth.SignInReqDto;
-import com.waypost.waypost.dto.auth.SignInRespDto;
-import com.waypost.waypost.dto.auth.SignUpReqDto;
+import com.waypost.waypost.dto.auth.*;
 import com.waypost.waypost.entity.Role;
 import com.waypost.waypost.entity.User;
 import com.waypost.waypost.entity.UserRole;
@@ -96,5 +93,15 @@ public class AuthService {
         }
 
         return userRepository.deactivateAccount(foundUser.getUserId());
+    }
+
+    public int activateAccount(ActivateAccountReqDto activateAccountReqDto) {
+        User foundUser = userRepository.findByEmail(activateAccountReqDto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 확인하세요."));
+        if (!passwordEncoder.matches(activateAccountReqDto.getPassword(), foundUser.getPassword())) {
+            throw new BadCredentialsException("사용자 정보를 확인하세요.");
+        }
+
+        return userRepository.activateAccount(foundUser.getUserId());
     }
 }

@@ -1,5 +1,6 @@
 package com.waypost.waypost.controller;
 
+import com.waypost.waypost.dto.auth.ActivateAccountReqDto;
 import com.waypost.waypost.dto.auth.DeactivateAccountReqDto;
 import com.waypost.waypost.dto.auth.SignInReqDto;
 import com.waypost.waypost.dto.auth.SignUpReqDto;
@@ -8,7 +9,6 @@ import com.waypost.waypost.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,10 +50,16 @@ public class AuthController {
         return ResponseEntity.ok().body(authService.signIn(signInReqDto));
     }
 
-    //회원탈퇴
+    //계정 비활성화
     @PostMapping("/account/deactivate")
     public ResponseEntity<?> deactivateAccount(@RequestBody DeactivateAccountReqDto deactivateAccountReqDto) {
         return ResponseEntity.ok().body(authService.deactivateAccount(deactivateAccountReqDto));
+    }
+
+    //계정 활성화
+    @PostMapping("/account/activate")
+    public ResponseEntity<?> activateAccount(@RequestBody ActivateAccountReqDto activateAccountReqDto) {
+        return ResponseEntity.ok().body(authService.activateAccount(activateAccountReqDto));
     }
 
 
