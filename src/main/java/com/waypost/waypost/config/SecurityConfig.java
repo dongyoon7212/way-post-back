@@ -61,7 +61,9 @@ public class SecurityConfig {
                                 "/post/photo/getList/{userId}",
                                 "/post/photo/getList/hot",
                                 "/post/photo/getList/recent",
-                                "/post/photo/getList/position"
+                                "/post/photo/getList/position",
+                                "/account/get/followerList",
+                                "/account/get/followingList"
                         )
                         .permitAll()
                         .anyRequest().authenticated());

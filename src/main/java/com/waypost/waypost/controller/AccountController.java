@@ -52,4 +52,14 @@ public class AccountController {
     public ResponseEntity<?> unfollow(@AuthenticationPrincipal PrincipalUser principalUser, @RequestBody FollowAddReqDto followAddReqDto) {
         return ResponseEntity.ok().body(accountService.unfollow(principalUser.getUser().getUserId(), followAddReqDto.getFolloweeId()));
     }
+
+    @GetMapping("/get/followerList")
+    public ResponseEntity<?> getFollowerList(@RequestParam int userId) {
+        return ResponseEntity.ok().body(accountService.getFollowerList(userId));
+    }
+
+    @GetMapping("/get/followingList")
+    public ResponseEntity<?> getFollowingList(@RequestParam int userId) {
+        return ResponseEntity.ok().body(accountService.getFollowingList(userId));
+    }
 }

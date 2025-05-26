@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -63,5 +64,13 @@ public class UserRepository {
 
     public int activateAccount(Integer userId) {
         return userMapper.activateAccount(userId);
+    }
+
+    public List<User> getFollowerList(int userId) {
+        return userMapper.getFollowerList(userId);
+    }
+
+    public List<User> getFollowingList(int userId) {
+        return userMapper.getFollowingList(userId);
     }
 }
