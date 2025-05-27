@@ -92,10 +92,10 @@ public class AccountMailService {
             int userId = Integer.parseInt(claims.get("userId").toString());
             UserRole userRole = userMapper.findUserRoleByUserIdAndRoleId(userId, 3);
             if(userRole != null) {
-                resultMap = Map.of("status", true, "message", "이미 인증 완료된 메일입니다.");
-            } else {
                 userMapper.setRole(userId, 2);
                 resultMap = Map.of("status", true, "message", "인증 완료되었습니다.");
+            } else {
+                resultMap = Map.of("status", true, "message", "이미 인증 완료된 메일입니다.");
             }
 
         } catch (ExpiredJwtException e) {
