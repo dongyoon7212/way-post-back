@@ -27,12 +27,15 @@
         <id property="userRoleId" column="user_role_id" />
         <result property="userId" column="user_id" />
         <result property="roleId" column="role_id" />
+        <result property="regDt" column="reg_dt" />
+        <result property="updDt" column="upd_dt" />
         <association property="role" resultMap="roleResultMap" />
     </resultMap>
 
     <resultMap id="roleResultMap" type="com.waypost.waypost.entity.Role">
         <id property="roleId" column="role_id" />
         <result property="roleName" column="role_name" />
+        <result property="roleNameKor" column="role_name_kor"/>
     </resultMap>
 
     <resultMap id="FindByUserIdRespDto" type="com.waypost.waypost.dto.account.FindByUserIdRespDto">
@@ -44,7 +47,7 @@
 
     <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
         insert into user_tb
-        values (0, #{email}, #{password}, #{username}, "https://firebasestorage.googleapis.com/v0/b/way-post-9f21b.firebasestorage.app/o/user-profile-img%2FprofileImg.jpg?alt=media&amp;token=f5cbbbf0-a382-4699-8248-13a948df38cf", "", now(), now(), 1, 1, 1, 1, Null, Null)
+        values (0, #{email}, #{password}, #{username}, "https://firebasestorage.googleapis.com/v0/b/way-post-9f21b.firebasestorage.app/o/user-profile-img%2FprofileImg.jpg?alt=media&amp;token=f5cbbbf0-a382-4699-8248-13a948df38cf", "", now(), now(), Null, 1, 1, 1, 1, Null, Null)
     </insert>
 
     <select id="findByEmail" parameterType="String" resultMap="UserResultMap">
@@ -184,6 +187,33 @@
         WHERE
             f.followee_id = #{userId}
     </select>
+
+    <select id="findUserRoleByUserIdAndRoleId" resultMap="userRoleResultMap" >
+        select
+            urt.user_role_id,
+            urt.user_id,
+            urt.role_id,
+            urt.reg_dt,
+            urt.upd_dt,
+            rt.role_name,
+            rt.role_name_kor
+        from
+            user_role_tb urt
+            left outer join role_tb rt on(rt.role_id = urt.role_id)
+        where
+            urt.user_id = #{userId}
+            and urt.role_id = #{roleId}
+    </select>
+
+    <update id="setRole" >
+        update
+            user_role_tb
+        set
+            role_id = #{roleId},
+            upd_dt = now()
+        where
+            user_id = #{userId};
+    </update>
 
 
 

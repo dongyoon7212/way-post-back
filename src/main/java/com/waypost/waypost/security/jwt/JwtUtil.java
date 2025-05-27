@@ -48,4 +48,15 @@ public class JwtUtil {
         }
         return claims;
     }
+
+    public String generateAuthMailToken(int userId, String toMailAddress) {
+        Date expireDate = new Date(new Date().getTime() + (1000 * 60 * 5));
+
+        return Jwts.builder()
+                .claim("userId", userId)
+                .claim("toMailAddress", toMailAddress)
+                .setExpiration(expireDate)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
 }
