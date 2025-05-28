@@ -73,4 +73,8 @@ public class UserRepository {
     public List<User> getFollowingList(int userId) {
         return userMapper.getFollowingList(userId);
     }
+
+    public int updateOAuth2Info(int userId, String provider, String providerId) {
+        return userMapper.updateOAuth2Info(userId, provider, providerId);
+    }
 }

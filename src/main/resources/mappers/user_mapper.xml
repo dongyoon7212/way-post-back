@@ -20,6 +20,8 @@
         <result property="isAccountNonLocked" column="account_locked" />
         <result property="isCredentialsNonExpired" column="credentials_expired" />
         <result property="isEnabled" column="account_enabled" />
+        <result property="provider" column="provider" />
+        <result property="providerId" column="provider_id" />
         <collection property="userRoles" resultMap="userRoleResultMap" />
     </resultMap>
 
@@ -215,6 +217,25 @@
             user_id = #{userId};
     </update>
 
+    <update id="updateOAuth2Info">
+        update
+            user_tb
+        set
+            provider = #{provider},
+            provider_id = #{providerId}
+        where
+            user_id = #{userId}
+    </update>
+
+    <select id="findByProviderAndProviderId" resultMap="UserResultMap">
+        select
+            *
+        from
+            user_tb
+        where
+            provider = #{provider}
+            AND provider_id = #{providerId}
+    </select>
 
 
 </mapper>

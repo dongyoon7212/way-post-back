@@ -22,5 +22,7 @@ public interface UserMapper {
     int activateAccount(Integer userId);
     List<User> getFollowerList(int userId);
     List<User> getFollowingList(int userId);
+    int updateOAuth2Info(int userId, String provider, String providerId);
+
 
 }
