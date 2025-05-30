@@ -6,5 +6,5 @@ import lombok.Data;
 public class OAuth2MergeRequestDto {
     private String email;
     private String provider;
-    private String providerId;
+    private String providerUserId;
 }

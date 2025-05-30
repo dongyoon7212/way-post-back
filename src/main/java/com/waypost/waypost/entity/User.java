@@ -28,8 +28,6 @@ public class User {
     private int isAccountNonLocked;
     private int isCredentialsNonExpired;
     private int isEnabled;
-    private String provider;
-    private String providerId;
 
     List<UserRole> userRoles;
 

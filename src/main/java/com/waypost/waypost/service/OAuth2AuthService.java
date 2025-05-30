@@ -5,6 +5,7 @@ import com.waypost.waypost.dto.auth.OAuth2SignupRequestDto;
 import com.waypost.waypost.entity.Role;
 import com.waypost.waypost.entity.User;
 import com.waypost.waypost.entity.UserRole;
+import com.waypost.waypost.repository.OAuth2UserRepository;
 import com.waypost.waypost.repository.UserRepository;
 import com.waypost.waypost.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class OAuth2AuthService {
     private UserRepository userRepository;
 
     @Autowired
+    private OAuth2UserRepository oAuth2UserRepository;
+
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     public Map<String, Object> mergeAccount(OAuth2MergeRequestDto oAuth2MergeRequestDto) {
@@ -37,7 +41,7 @@ public class OAuth2AuthService {
             );
         }
 
-        userRepository.updateOAuth2Info(user.get().getUserId(), oAuth2MergeRequestDto.getProvider(), oAuth2MergeRequestDto.getProviderId());
+        userRepository.updateOAuth2Info(user.get().getUserId(), oAuth2MergeRequestDto.getProvider(), oAuth2MergeRequestDto.getProviderUserId());
         return Map.of(
                 "status", HttpStatus.OK.value(),
                 "code", 2000,
@@ -65,8 +69,9 @@ public class OAuth2AuthService {
                 .roleId(role.getRoleId())
                 .role(role)
                 .build();
-
         userRoleRepository.save(userRole);
+        oAuth2UserRepository.insertOAuth2User(oAuth2SignupRequestDto.toOAuth2User(user.get().getUserId()));
+
         return Map.of(
                 "status", HttpStatus.OK.value(),
                 "code", 2000,

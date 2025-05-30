@@ -20,8 +20,6 @@
         <result property="isAccountNonLocked" column="account_locked" />
         <result property="isCredentialsNonExpired" column="credentials_expired" />
         <result property="isEnabled" column="account_enabled" />
-        <result property="provider" column="provider" />
-        <result property="providerId" column="provider_id" />
         <collection property="userRoles" resultMap="userRoleResultMap" />
     </resultMap>
 
@@ -49,7 +47,7 @@
 
     <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
         insert into user_tb
-        values (0, #{email}, #{password}, #{username}, "https://firebasestorage.googleapis.com/v0/b/way-post-9f21b.firebasestorage.app/o/user-profile-img%2FprofileImg.jpg?alt=media&amp;token=f5cbbbf0-a382-4699-8248-13a948df38cf", "", now(), now(), Null, 1, 1, 1, 1, Null, Null)
+        values (0, #{email}, #{password}, #{username}, "https://firebasestorage.googleapis.com/v0/b/way-post-9f21b.firebasestorage.app/o/user-profile-img%2FprofileImg.jpg?alt=media&amp;token=f5cbbbf0-a382-4699-8248-13a948df38cf", "", now(), now(), Null, 1, 1, 1, 1)
     </insert>
 
     <select id="findByEmail" parameterType="String" resultMap="UserResultMap">

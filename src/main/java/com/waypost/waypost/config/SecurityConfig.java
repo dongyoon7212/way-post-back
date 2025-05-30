@@ -1,6 +1,9 @@
 package com.waypost.waypost.config;
 
 import com.waypost.waypost.security.filter.JwtAuthenticationFilter;
+import com.waypost.waypost.security.handler.OAuth2SuccessHandler;
+import com.waypost.waypost.service.OAuth2PrincipalUserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +24,12 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private OAuth2PrincipalUserService oAuth2PrincipalUserService;
+
+    @Autowired
+    private OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -64,10 +73,26 @@ public class SecurityConfig {
                                 "/post/photo/getList/position",
                                 "/account/get/followerList",
                                 "/account/get/followingList",
-                                "/mail/**"
+                                "/mail/**",
+                                "/oauth2/**",
+                                "/login/oauth2/**"
                         )
                         .permitAll()
                         .anyRequest().authenticated());
+
+        http.oauth2Login(oauth2 -> oauth2 //죽일놈 개같은거
+                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2PrincipalUserService))
+                .successHandler(oAuth2SuccessHandler)
+        );
+
+        http.exceptionHandling(exception -> exception //개놈새끼, 이거없으면 개지랄남
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"message\": \"Unauthorized\"}");
+                })
+        );
+
         return http.build();
     }
 
