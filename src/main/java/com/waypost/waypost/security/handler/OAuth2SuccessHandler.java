@@ -34,11 +34,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        System.out.println("요청은 옴?");
         DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
-        System.out.println("defaultOauth2User" + defaultOAuth2User);
         String provider = defaultOAuth2User.getAttribute("provider").toString();
         String providerUserId = defaultOAuth2User.getAttribute("id").toString();
+        String email = defaultOAuth2User.getAttribute("email");
 
         // OAuth2 정보로 연동된 계정 찾기
         OAuth2User oAuth2User = oAuth2UserMapper.findByProviderAndProviderUserId(provider, providerUserId);
@@ -47,7 +46,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // OAuth2 동기화
         if (oAuth2User == null) { //죠랄남 개같은거
             // oAuth2User 않은 경우: 프론트로 provider 정보와 providerUserId 전달
-            response.sendRedirect("http://" + clientAddress + "/auth/oauth2?provider=" + provider + "&providerUserId=" + providerUserId);
+            response.sendRedirect("http://" + clientAddress + "/auth/oauth2?provider=" + provider + "&providerUserId=" + providerUserId + "&email=" + email);
             return;
         }
 

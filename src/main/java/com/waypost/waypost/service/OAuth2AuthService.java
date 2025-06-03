@@ -51,14 +51,14 @@ public class OAuth2AuthService {
     }
 
     public Map<String, Object> signup(OAuth2SignupRequestDto oAuth2SignupRequestDto) {
-//        Optional<User> existingUser = userRepository.findByEmail(oAuth2SignupRequestDto.getEmail());
-//        if (existingUser != null) {
-//            return Map.of(
-//                    "status", HttpStatus.CONFLICT.value(),
-//                    "code", 4002,
-//                    "message", "이미 존재하는 이메일입니다."
-//            );
-//        }
+        Optional<User> existingUser = userRepository.findByEmail(oAuth2SignupRequestDto.getEmail());
+        if (existingUser != null) {
+            return Map.of(
+                    "status", HttpStatus.CONFLICT.value(),
+                    "code", 4002,
+                    "message", "이미 존재하는 이메일입니다."
+            );
+        }
 
         Optional<User> user = userRepository.save(oAuth2SignupRequestDto.toEntity(passwordEncoder));
         Role role = Role.builder()
