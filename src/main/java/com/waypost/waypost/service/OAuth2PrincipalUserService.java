@@ -16,11 +16,12 @@ public class OAuth2PrincipalUserService implements OAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        System.out.println("여기로 요청 오나?");
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        System.out.println(attributes);
+        System.out.println("attributes" + attributes);
 
         String provider = userRequest.getClientRegistration().getClientName(); // Google, Naver, Kakao
         Map<String, Object> newAttributes = null;

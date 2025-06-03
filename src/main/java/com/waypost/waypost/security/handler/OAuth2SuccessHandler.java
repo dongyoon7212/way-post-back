@@ -2,7 +2,6 @@ package com.waypost.waypost.security.handler;
 
 import com.waypost.waypost.dto.account.FindByUserIdRespDto;
 import com.waypost.waypost.entity.OAuth2User;
-import com.waypost.waypost.entity.User;
 import com.waypost.waypost.mapper.OAuth2UserMapper;
 import com.waypost.waypost.mapper.UserMapper;
 import com.waypost.waypost.security.jwt.JwtUtil;
@@ -35,8 +34,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
+        System.out.println("요청은 옴?");
         DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
+        System.out.println("defaultOauth2User" + defaultOAuth2User);
         String provider = defaultOAuth2User.getAttribute("provider").toString();
         String providerUserId = defaultOAuth2User.getAttribute("id").toString();
 
