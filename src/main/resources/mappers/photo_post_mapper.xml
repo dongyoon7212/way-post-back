@@ -411,4 +411,14 @@
             p.latitude = #{getPhotoPostListByPositionReqDto.latitude} and
             p.longitude = #{getPhotoPostListByPositionReqDto.longitude}
     </select>
+
+    <update id="editPhotoPostText" >
+        update
+            photo_post_tb
+        set
+            post_text = #{text},
+            upd_dt = now()
+        where
+            photo_post_id = #{photoPostId}
+    </update>
 </mapper>

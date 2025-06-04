@@ -51,8 +51,10 @@ public class OAuth2AuthService {
     }
 
     public Map<String, Object> signup(OAuth2SignupRequestDto oAuth2SignupRequestDto) {
+        System.out.println("가입 요청 들어옴");
+        System.out.println(oAuth2SignupRequestDto);
         Optional<User> existingUser = userRepository.findByEmail(oAuth2SignupRequestDto.getEmail());
-        if (existingUser != null) {
+        if (existingUser.isPresent()) {
             return Map.of(
                     "status", HttpStatus.CONFLICT.value(),
                     "code", 4002,

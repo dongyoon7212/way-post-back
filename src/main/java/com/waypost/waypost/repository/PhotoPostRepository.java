@@ -61,4 +61,8 @@ public class PhotoPostRepository {
     public List<PhotoPost> getPhotoPostListByPosition(GetPhotoPostListByPositionReqDto getPhotoPostListByPositionReqDto, Integer currentUserId) {
         return photoPostMapper.getPhotoPostListByPosition(getPhotoPostListByPositionReqDto, currentUserId);
     }
+
+    public int editPhotoPostText(int photoPostId, String text) {
+        return photoPostMapper.editPhotoPostText(photoPostId, text);
+    }
 }

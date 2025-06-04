@@ -68,4 +68,10 @@ public class PostService {
     public List<PhotoPost> getPhotoPostListByPosition(GetPhotoPostListByPositionReqDto getPhotoPostListByPositionReqDto, Integer currentUserId) {
         return photoPostRepository.getPhotoPostListByPosition(getPhotoPostListByPositionReqDto, currentUserId);
     }
+
+    public int editPhotoPostText(int photoPostId, String text) {
+        System.out.println(photoPostId);
+        System.out.println(text);
+        return photoPostRepository.editPhotoPostText(photoPostId, text);
+    }
 }

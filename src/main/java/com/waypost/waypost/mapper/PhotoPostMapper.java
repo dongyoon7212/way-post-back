@@ -18,4 +18,5 @@ public interface PhotoPostMapper {
     public List<PhotoPost> getHotPhotoPostList(Integer currentUserId);
     public List<PhotoPost> getRecentPhotoPostList(Integer currentUserId);
     public List<PhotoPost> getPhotoPostListByPosition(GetPhotoPostListByPositionReqDto getPhotoPostListByPositionReqDto, Integer currentUserId);
+    public int editPhotoPostText(int photoPostId, String text);
 }

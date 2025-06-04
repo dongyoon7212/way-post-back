@@ -105,4 +105,9 @@ public class PostController {
         }
     }
 
+    @PostMapping("/photo/edit/text")
+    public ResponseEntity<?> editPhotoPostText(@RequestBody editPhotoPostTextReqDto editPhotoPostTextReqDto) {
+        return ResponseEntity.ok().body(postService.editPhotoPostText(editPhotoPostTextReqDto.getPhotoPostId(), editPhotoPostTextReqDto.getText()));
+    }
+
 }
