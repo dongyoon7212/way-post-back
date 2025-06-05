@@ -21,6 +21,10 @@ public class AccountService {
         return findByUserIdRespDto;
     }
 
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public int editProfileImg(EditProfileImgReqDto editProfileImgReqDto) {
         return userRepository.editProfileImg(editProfileImgReqDto);
     }
