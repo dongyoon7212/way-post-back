@@ -20,8 +20,6 @@ public class OAuth2PrincipalUserService implements OAuth2UserService {
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        System.out.println("attributes" + attributes);
-
         String provider = userRequest.getClientRegistration().getClientName(); // Google, Naver, Kakao
         String email = null;
         String id = null;
