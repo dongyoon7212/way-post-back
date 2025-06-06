@@ -106,4 +106,9 @@ public class AuthService {
         return userRepository.activateAccount(foundUser.getUserId());
     }
 
+    public int newPassword(int userId, String newPassword) {
+        String password = passwordEncoder.encode(newPassword);
+        return userRepository.newPassword(userId, password);
+    }
+
 }

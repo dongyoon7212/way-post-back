@@ -77,4 +77,8 @@ public class UserRepository {
     public int updateOAuth2Info(int userId, String provider, String providerId) {
         return userMapper.updateOAuth2Info(userId, provider, providerId);
     }
+
+    public int newPassword(int userId, String newPassword) {
+        return userMapper.newPassword(userId, newPassword);
+    }
 }

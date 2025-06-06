@@ -23,6 +23,6 @@ public interface UserMapper {
     List<User> getFollowerList(int userId);
     List<User> getFollowingList(int userId);
     int updateOAuth2Info(int userId, String provider, String providerId);
-
+    int newPassword(int userId, String newPassword);
 
 }

@@ -235,5 +235,15 @@
             AND provider_id = #{providerId}
     </select>
 
+    <update id="newPassword">
+        update
+            user_tb
+        set
+            password = #{newPassword},
+            upd_dt = now()
+        where
+            user_id = #{userId}
+    </update>
+
 
 </mapper>
