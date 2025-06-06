@@ -1,8 +1,11 @@
 package com.waypost.waypost.service;
 
+import com.waypost.waypost.dto.emailVerification.VerifyCodeReqDto;
 import com.waypost.waypost.entity.EmailVerification;
+import com.waypost.waypost.entity.User;
 import com.waypost.waypost.mapper.UserMapper;
 import com.waypost.waypost.repository.EmailVerifiCationRepository;
+import com.waypost.waypost.security.jwt.JwtUtil;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -23,6 +27,12 @@ public class EmailVerificationService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public void sendVerificationCode(int userId, String email) {
         String code = String.format("%06d", new Random().nextInt(999999));
@@ -62,8 +72,41 @@ public class EmailVerificationService {
         }
     }
 
-    public Map<String, Object> verifyCode(int userId, String inputCode) {
+    public Map<String, Object> verifyCode(VerifyCodeReqDto verifyCodeReqDto) {
+        //이메일 계정 인증 - id, code
+        //비밀번호 변경 이메일 인증 - email, code
+        int userId;
+        String code = verifyCodeReqDto.getCode();
+
+        if(verifyCodeReqDto.getUserId() == 0) { //비밀번호 변경 인증 분기
+            Optional<User> user = accountService.getUserByEmail(verifyCodeReqDto.getEmail());
+            userId = user.get().getUserId();
+            EmailVerification emailVerification = repository.findLatestByUserId(userId);
+
+            if (emailVerification == null || emailVerification.getIsVerified()) {
+                return Map.of("status", false, "code", 4001, "message", "잘못된 요청입니다.");
+            }
+            if (emailVerification.getExpiredDt().isBefore(LocalDateTime.now())) {
+                return Map.of("status", false, "code", 4002, "message", "코드가 만료되었습니다.");
+            }
+            if (emailVerification.getFailCount() >= 5) {
+                return Map.of("status", false, "code", 4003, "message", "5회 이상 실패로 인증이 차단되었습니다.");
+            }
+            if (!emailVerification.getVerificationCode().equals(code)) {
+                repository.incrementFailCount(emailVerification.getEmailVrfctId());
+                return Map.of("status", false, "code", 4004, "message", "인증 코드가 일치하지 않습니다.");
+            }
+            repository.markAsVerified(emailVerification.getEmailVrfctId());
+            String tempToken = jwtUtil.generateToken(Integer.toString(userId), verifyCodeReqDto.getEmail(), false, true);
+
+            return Map.of("status", true, "code", 2000, "tempToken", tempToken);
+
+        } else {
+            userId = verifyCodeReqDto.getUserId();
+        }
+
         EmailVerification emailVerification = repository.findLatestByUserId(userId);
+
         if (emailVerification == null || emailVerification.getIsVerified()) {
             return Map.of("status", false, "code", 4001, "message", "잘못된 요청입니다.");
         }
@@ -73,7 +116,7 @@ public class EmailVerificationService {
         if (emailVerification.getFailCount() >= 5) {
             return Map.of("status", false, "code", 4003, "message", "5회 이상 실패로 인증이 차단되었습니다.");
         }
-        if (!emailVerification.getVerificationCode().equals(inputCode)) {
+        if (!emailVerification.getVerificationCode().equals(code)) {
             repository.incrementFailCount(emailVerification.getEmailVrfctId());
             return Map.of("status", false, "code", 4004, "message", "인증 코드가 일치하지 않습니다.");
         }

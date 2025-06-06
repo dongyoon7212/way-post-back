@@ -42,9 +42,18 @@ public class JwtAuthenticationFilter implements Filter {
             String accessToken = removeBearer(bearerToken);
             Claims claims = jwtUtil.parseToken(accessToken);
             if(claims != null) {
-                String email = claims.getSubject();
-                User user = getUser(email);
-                setAuthentication(user);
+                boolean isTemp = claims.get("isTemp", Boolean.class) != null && claims.get("isTemp", Boolean.class);
+
+                if (isTemp) {
+                    // 비밀번호 변경 API 등 특정 URI에서만 허용되도록 별도로 분기 (예시: 컨트롤러에선 SecurityContext 안쓰고 직접 claims 검증)
+                    // 또는 SecurityContext에 넣지 않음
+                    servletRequest.setAttribute("tempTokenClaims", claims); // 이후 컨트롤러에서 꺼내 쓸 수 있도록 설정
+                } else {
+                    // 일반 로그인 사용자 처리
+                    String email = claims.getSubject();
+                    User user = getUser(email);
+                    setAuthentication(user);
+                }
             }
         }
 

@@ -43,12 +43,14 @@ public class EmailVerificationController {
 
     @PostMapping("/verify-code")
     public ResponseEntity<?> verifyCode(@RequestBody VerifyCodeReqDto verifyCodeReqDto) {
-        int userId = verifyCodeReqDto.getUserId();
-        if(userId == 0) {
-            Optional<User> user = accountService.getUserByEmail(verifyCodeReqDto.getEmail());
-            userId = user.get().getUserId();
-        }
-        String code = verifyCodeReqDto.getCode();
-        return ResponseEntity.ok().body(verificationService.verifyCode(userId, code));
+//        int userId = verifyCodeReqDto.getUserId();
+//        if(userId == 0) {
+//            Optional<User> user = accountService.getUserByEmail(verifyCodeReqDto.getEmail());
+//            userId = user.get().getUserId();
+//            String code = verifyCodeReqDto.getCode();
+//            return ResponseEntity.ok().body(verificationService.verifyCode(userId, code));
+//        }
+//        String code = verifyCodeReqDto.getCode();
+        return ResponseEntity.ok().body(verificationService.verifyCode(verifyCodeReqDto));
     }
 }

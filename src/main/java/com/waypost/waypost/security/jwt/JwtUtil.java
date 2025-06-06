@@ -26,10 +26,11 @@ public class JwtUtil {
         refreshTokenExpire = 1000l * 60 * 60 * 24 * 7;
     }
 
-    public String generateToken(String userId, String email, boolean isRefreshToken) {
+    public String generateToken(String userId, String email, boolean isRefreshToken, boolean isTemp) {
         return Jwts.builder()
                 .setId(userId)
                 .setSubject(email)
+                .claim("isTemp", isTemp)
                 .setExpiration(new Date(System.currentTimeMillis() + (isRefreshToken ? refreshTokenExpire : accessTokenExpire)))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();

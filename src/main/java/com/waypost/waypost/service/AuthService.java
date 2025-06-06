@@ -79,7 +79,7 @@ public class AuthService {
                 .generateToken(Integer.toString(
                                 foundUser.getUserId()),
                         foundUser.getEmail(),
-                        false);
+                        false, false);
 
         return SignInRespDto.builder()
                 .accessToken(accessToken)
