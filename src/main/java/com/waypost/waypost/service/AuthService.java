@@ -1,5 +1,6 @@
 package com.waypost.waypost.service;
 
+import com.waypost.waypost.dto.account.ChangePasswordReqDto;
 import com.waypost.waypost.dto.auth.*;
 import com.waypost.waypost.entity.Role;
 import com.waypost.waypost.entity.User;
@@ -10,12 +11,10 @@ import com.waypost.waypost.security.jwt.JwtUtil;
 import com.waypost.waypost.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,6 +68,7 @@ public class AuthService {
     }
 
     public SignInRespDto signIn(SignInReqDto signInReqDto) {
+        System.out.println(signInReqDto);
         User foundUser = userRepository.findByEmail(signInReqDto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 확인하세요."));
         if (!passwordEncoder.matches(signInReqDto.getPassword(), foundUser.getPassword())) {
@@ -110,5 +110,6 @@ public class AuthService {
         String password = passwordEncoder.encode(newPassword);
         return userRepository.newPassword(userId, password);
     }
+
 
 }

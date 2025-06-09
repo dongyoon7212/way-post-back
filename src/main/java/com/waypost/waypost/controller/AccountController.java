@@ -3,16 +3,10 @@ package com.waypost.waypost.controller;
 import com.waypost.waypost.dto.account.EditIntroduceReqDto;
 import com.waypost.waypost.dto.account.EditProfileImgReqDto;
 import com.waypost.waypost.dto.account.FollowAddReqDto;
-import com.waypost.waypost.dto.account.NewPasswordReqDto;
-import com.waypost.waypost.dto.post.GetPhotoPostListByPositionReqDto;
-import com.waypost.waypost.security.jwt.JwtUtil;
+import com.waypost.waypost.dto.account.ChangePasswordReqDto;
 import com.waypost.waypost.security.principal.PrincipalUser;
 import com.waypost.waypost.service.AccountService;
-import com.waypost.waypost.service.AuthService;
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +61,12 @@ public class AccountController {
     @GetMapping("/get/followingList")
     public ResponseEntity<?> getFollowingList(@RequestParam int userId) {
         return ResponseEntity.ok().body(accountService.getFollowingList(userId));
+    }
+
+    //일반 비밀번호 변경
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordReqDto changePasswordReqDto, @AuthenticationPrincipal PrincipalUser principalUser) {
+        return ResponseEntity.ok().body(accountService.changePassword(changePasswordReqDto, principalUser));
     }
 
 

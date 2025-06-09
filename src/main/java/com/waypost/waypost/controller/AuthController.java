@@ -1,10 +1,6 @@
 package com.waypost.waypost.controller;
 
-import com.waypost.waypost.dto.account.NewPasswordReqDto;
-import com.waypost.waypost.dto.auth.ActivateAccountReqDto;
-import com.waypost.waypost.dto.auth.DeactivateAccountReqDto;
-import com.waypost.waypost.dto.auth.SignInReqDto;
-import com.waypost.waypost.dto.auth.SignUpReqDto;
+import com.waypost.waypost.dto.auth.*;
 import com.waypost.waypost.security.jwt.JwtUtil;
 import com.waypost.waypost.security.principal.PrincipalUser;
 import com.waypost.waypost.service.AuthService;
@@ -14,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,7 +69,7 @@ public class AuthController {
         return ResponseEntity.ok().body(authService.activateAccount(activateAccountReqDto));
     }
 
-    //비밀번호 변경 - 토큰
+    //비밀번호 찾기, 변경 - 토큰
     @PostMapping("/new-password")
     public ResponseEntity<?> newPassword(@RequestBody NewPasswordReqDto newPasswordReqDto, HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
@@ -91,5 +88,6 @@ public class AuthController {
         authService.newPassword(userId, newPasswordReqDto.getNewPassword());
         return ResponseEntity.ok().body(Map.of("status", true, "code", 2000, "message", "비밀번호가 변경되었습니다."));
     }
+
 
 }

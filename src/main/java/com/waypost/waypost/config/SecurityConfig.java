@@ -65,6 +65,7 @@ public class SecurityConfig {
                 auth
                         .requestMatchers(
                                 "/auth/**",
+                                "/auth/signin",
                                 "/post/photo/getList",
                                 "/account/get/user",
                                 "/post/photo/getList/{userId}",
@@ -85,13 +86,13 @@ public class SecurityConfig {
                 .successHandler(oAuth2SuccessHandler)
         );
 
-//        http.exceptionHandling(exception -> exception //개놈새끼, 이거없으면 개지랄남
-//                .authenticationEntryPoint((request, response, authException) -> {
-//                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//                    response.setContentType("application/json");
-//                    response.getWriter().write("{\"message\": \"Unauthorized\"}");
-//                })
-//        );
+        http.exceptionHandling(exception -> exception //개놈새끼, 이거없으면 개지랄남
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"message\": \"Unauthorized\"}");
+                })
+        );
 
         return http.build();
     }
