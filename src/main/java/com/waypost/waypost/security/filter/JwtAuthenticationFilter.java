@@ -38,11 +38,9 @@ public class JwtAuthenticationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String bearerToken = getAuthorization((HttpServletRequest) servletRequest);
-        System.out.println("bearerToken : " + bearerToken);
 
         if(isValidToken(bearerToken)) {
             String accessToken = removeBearer(bearerToken);
-            System.out.println("accessToken" + accessToken);
             Claims claims = jwtUtil.parseToken(accessToken);
             if(claims != null) {
                 boolean isTemp = claims.get("isTemp", Boolean.class) != null && claims.get("isTemp", Boolean.class);
@@ -90,7 +88,6 @@ public class JwtAuthenticationFilter implements Filter {
     }
 
     private String getAuthorization(HttpServletRequest request) {
-        System.out.println("getHeader : " + request.getHeader("Authorization"));
         return request.getHeader("Authorization");
     }
 
