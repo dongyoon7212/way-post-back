@@ -65,7 +65,7 @@ public class AccountService {
             throw new BadCredentialsException("사용자 정보를 확인하세요.");
         }
 
-        return userRepository.newPassword(foundUser.getUserId(), changePasswordReqDto.getNewPassword());
+        return userRepository.newPassword(foundUser.getUserId(), passwordEncoder.encode(changePasswordReqDto.getNewPassword()));
     }
 
 
