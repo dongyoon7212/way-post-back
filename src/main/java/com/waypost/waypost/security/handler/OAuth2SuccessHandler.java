@@ -53,7 +53,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         FindByUserIdRespDto findByUserIdRespDto = userMapper.findByUserId(oAuth2User.getUserId(), null);
 
         // OAuth2 로그인을 통해 회원가입을 진행한 기록이 있는지 (연동이 된 경우)
-        String accessToken = jwtUtil.generateToken(Integer.toString(findByUserIdRespDto.getUser().getUserId()), findByUserIdRespDto.getUser().getEmail(), false, false);
+        String accessToken = jwtUtil.generateToken(Integer.toString(findByUserIdRespDto.getUser().getUserId()), findByUserIdRespDto.getUser().getEmail(), false);
         response.sendRedirect("http://" + clientAddress + "/auth/oauth2/signin?accessToken=" + accessToken);
 
     }

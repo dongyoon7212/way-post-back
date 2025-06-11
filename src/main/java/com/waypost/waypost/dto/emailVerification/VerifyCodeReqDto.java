@@ -10,5 +10,5 @@ public class VerifyCodeReqDto {
     private String email;
     private int userId;
     private String code;
-
+    private String purpose;
 }

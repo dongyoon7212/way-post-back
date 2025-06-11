@@ -1,56 +1,51 @@
 package com.waypost.waypost.service;
 
 import com.waypost.waypost.dto.emailVerification.VerifyCodeReqDto;
-import com.waypost.waypost.entity.EmailVerification;
 import com.waypost.waypost.entity.User;
 import com.waypost.waypost.mapper.UserMapper;
-import com.waypost.waypost.repository.EmailVerifiCationRepository;
+import com.waypost.waypost.repository.UserRepository;
+import com.waypost.waypost.repository.UserRoleRepository;
 import com.waypost.waypost.security.jwt.JwtUtil;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
 public class EmailVerificationService {
+
     @Autowired
-    private EmailVerifiCationRepository repository;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
-    private JavaMailSender mailSender;
+    private UserRoleRepository userRoleRepository;
 
     @Autowired
-    private AccountService accountService;
+    private JavaMailSender mailSender;
 
     @Autowired
     private JwtUtil jwtUtil;
 
-    public void sendVerificationCode(int userId, String email) {
+    public void sendVerificationCode(int userId, String email, String purpose) {
         String code = String.format("%06d", new Random().nextInt(999999));
-        LocalDateTime expiredDt = LocalDateTime.now().plusMinutes(2);
+        String codeKey = purpose + "-verification:" + userId;
 
-        repository.invalidatePreviousCodes(userId);
-
-        EmailVerification emailVerification = new EmailVerification();
-        emailVerification.setUserId(userId);
-        emailVerification.setVerificationCode(code);
-        emailVerification.setExpiredDt(expiredDt);
-        repository.save(emailVerification);
+        redisTemplate.opsForValue().set(codeKey, code, Duration.ofMinutes(2));
 
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(email);
-            helper.setSubject("WayPost 이메일 인증 코드");
+            helper.setSubject("WayPost 이메일 인증 코드입니다.");
             helper.setText(
                     "<div style=\"font-family: 'Arial', sans-serif; background-color: #f9f9f9; padding: 30px; border-radius: 10px; border: 1px solid #ddd; max-width: 500px; margin: auto;\">" +
                             "<div style=\"text-align: center; margin-bottom: 20px;\">" +
@@ -66,63 +61,53 @@ public class EmailVerificationService {
                             "<p style=\"font-size: 12px; color: #999; text-align: center;\">본 메일은 WayPost 인증용으로 발송되었으며, 회신하지 마세요.</p>" +
                             "</div>",
                     true
-            );            mailSender.send(message);
+            );
+            mailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // 로깅 필요
         }
     }
 
-    public Map<String, Object> verifyCode(VerifyCodeReqDto verifyCodeReqDto) {
-        //이메일 계정 인증 - id, code
-        //비밀번호 변경 이메일 인증 - email, code
-        int userId;
-        String code = verifyCodeReqDto.getCode();
+    public Map<String, Object> verifyCode(VerifyCodeReqDto dto) {
+        String purpose = dto.getPurpose(); // "signup" or "reset"
+        int userId = dto.getUserId();
+        String email = dto.getEmail();
+        String code = dto.getCode();
 
-        if(verifyCodeReqDto.getUserId() == 0) { //비밀번호 변경 인증 분기
-            Optional<User> user = accountService.getUserByEmail(verifyCodeReqDto.getEmail());
-            userId = user.get().getUserId();
-            EmailVerification emailVerification = repository.findLatestByUserId(userId);
+        String codeKey = purpose + "-verification:" + userId;
+        String failKey = purpose + "-verification:fail:" + userId;
 
-            if (emailVerification == null || emailVerification.getIsVerified()) {
-                return Map.of("status", false, "code", 4001, "message", "잘못된 요청입니다.");
+        String savedCode = (String) redisTemplate.opsForValue().get(codeKey);
+        if (savedCode == null) {
+            return Map.of("status", false, "code", 4001, "message", "인증 코드가 만료되었습니다.");
+        }
+
+        if (!savedCode.equals(code)) {
+            Long fails = redisTemplate.opsForValue().increment(failKey);
+            if (fails == 1) redisTemplate.expire(failKey, Duration.ofMinutes(2));
+            if (fails >= 5) {
+                redisTemplate.delete(codeKey);
+                redisTemplate.delete(failKey);
+                return Map.of("status", false, "code", 4002, "message", "인증 실패 횟수를 초과했습니다.");
             }
-            if (emailVerification.getExpiredDt().isBefore(LocalDateTime.now())) {
-                return Map.of("status", false, "code", 4002, "message", "코드가 만료되었습니다.");
-            }
-            if (emailVerification.getFailCount() >= 5) {
-                return Map.of("status", false, "code", 4003, "message", "5회 이상 실패로 인증이 차단되었습니다.");
-            }
-            if (!emailVerification.getVerificationCode().equals(code)) {
-                repository.incrementFailCount(emailVerification.getEmailVrfctId());
-                return Map.of("status", false, "code", 4004, "message", "인증 코드가 일치하지 않습니다.");
-            }
-            repository.markAsVerified(emailVerification.getEmailVrfctId());
-            String tempToken = jwtUtil.generateToken(Integer.toString(userId), verifyCodeReqDto.getEmail(), false, true);
-
-            return Map.of("status", true, "code", 2000, "tempToken", tempToken);
-
-        } else {
-            userId = verifyCodeReqDto.getUserId();
+            return Map.of("status", false, "code", 4003, "message", "인증 코드가 올바르지 않습니다.");
         }
 
-        EmailVerification emailVerification = repository.findLatestByUserId(userId);
+        // 인증 성공
+        redisTemplate.delete(codeKey);
+        redisTemplate.delete(failKey);
 
-        if (emailVerification == null || emailVerification.getIsVerified()) {
-            return Map.of("status", false, "code", 4001, "message", "잘못된 요청입니다.");
+        if (purpose.equals("signup")) {
+            userMapper.setRole(userId, 2); // 일반 사용자로 승격
+            return Map.of("status", true, "code", 2000, "message", "이메일 인증이 완료되었습니다.");
         }
-        if (emailVerification.getExpiredDt().isBefore(LocalDateTime.now())) {
-            return Map.of("status", false, "code", 4002, "message", "코드가 만료되었습니다.");
+
+        if (purpose.equals("reset")) {
+            redisTemplate.opsForValue().set("reset-allowed:" + email, "ok", Duration.ofMinutes(5));
+            return Map.of("status", true, "code", 2000, "message", "이메일 인증이 완료되었습니다.");
         }
-        if (emailVerification.getFailCount() >= 5) {
-            return Map.of("status", false, "code", 4003, "message", "5회 이상 실패로 인증이 차단되었습니다.");
-        }
-        if (!emailVerification.getVerificationCode().equals(code)) {
-            repository.incrementFailCount(emailVerification.getEmailVrfctId());
-            return Map.of("status", false, "code", 4004, "message", "인증 코드가 일치하지 않습니다.");
-        }
-        userMapper.setRole(userId, 2); // role_id = 2로 변경
-        repository.markAsVerified(emailVerification.getEmailVrfctId());
-        return Map.of("status", true, "code", 2000, "message", "인증 성공");
+
+        return Map.of("status", false, "code", 4004, "message", "알 수 없는 인증 요청입니다.");
     }
 
 }
