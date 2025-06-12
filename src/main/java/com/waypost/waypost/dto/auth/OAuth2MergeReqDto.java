@@ -1,25 +1,20 @@
 package com.waypost.waypost.dto.auth;
 
 import com.waypost.waypost.entity.OAuth2User;
-import com.waypost.waypost.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+@Schema(description = "OAuth2 계정 통합 요청 DTO")
 @Data
-public class OAuth2SignupRequestDto {
+public class OAuth2MergeReqDto {
+    @Schema(description = "통합할 일반 계정 이메일")
     private String email;
-    private String username;
+    @Schema(description = "통합할 일반 계정 비밀번호")
     private String password;
+    @Schema(description = "OAuth2 Provider")
     private String provider;
+    @Schema(description = "OAuth2 고유 ID")
     private String providerUserId;
-
-    public User toEntity(BCryptPasswordEncoder passwordEncoder) {
-        return User.builder()
-                .username(username)
-                .password(passwordEncoder.encode(password))
-                .email(email)
-                .build();
-    }
 
     public OAuth2User toOAuth2User(int userId) {
         return OAuth2User.builder()

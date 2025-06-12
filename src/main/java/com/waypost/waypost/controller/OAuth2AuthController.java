@@ -1,7 +1,7 @@
 package com.waypost.waypost.controller;
 
-import com.waypost.waypost.dto.auth.OAuth2MergeRequestDto;
-import com.waypost.waypost.dto.auth.OAuth2SignupRequestDto;
+import com.waypost.waypost.dto.auth.OAuth2MergeReqDto;
+import com.waypost.waypost.dto.auth.OAuth2SignupReqDto;
 import com.waypost.waypost.service.OAuth2AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,13 +22,13 @@ public class OAuth2AuthController {
 
     @Operation(summary = "OAuth2 계정 통합", description = "OAuth2 계정과 일반 계정을 통합합니다.")
     @PostMapping("/merge")
-    public ResponseEntity<?> mergeAccount(@RequestBody OAuth2MergeRequestDto dto) {
+    public ResponseEntity<?> mergeAccount(@RequestBody OAuth2MergeReqDto dto) {
         return ResponseEntity.ok().body(oAuth2AuthService.mergeAccount(dto));
     }
 
     @Operation(summary = "OAuth2 신규 계정 가입", description = "OAuth2 계정을 통해 신규 회원가입을 합니다.")
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody OAuth2SignupRequestDto dto) {
+    public ResponseEntity<?> signup(@RequestBody OAuth2SignupReqDto dto) {
         return ResponseEntity.ok().body(oAuth2AuthService.signup(dto));
     }
 }

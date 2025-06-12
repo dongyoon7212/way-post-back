@@ -1,7 +1,7 @@
 package com.waypost.waypost.service;
 
-import com.waypost.waypost.dto.auth.OAuth2MergeRequestDto;
-import com.waypost.waypost.dto.auth.OAuth2SignupRequestDto;
+import com.waypost.waypost.dto.auth.OAuth2MergeReqDto;
+import com.waypost.waypost.dto.auth.OAuth2SignupReqDto;
 import com.waypost.waypost.entity.Role;
 import com.waypost.waypost.entity.User;
 import com.waypost.waypost.entity.UserRole;
@@ -33,15 +33,15 @@ public class OAuth2AuthService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public Map<String, Object> mergeAccount(OAuth2MergeRequestDto oAuth2MergeRequestDto) {
-        User foundUser = userRepository.findByEmail(oAuth2MergeRequestDto.getEmail())
+    public Map<String, Object> mergeAccount(OAuth2MergeReqDto oAuth2MergeReqDto) {
+        User foundUser = userRepository.findByEmail(oAuth2MergeReqDto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 확인하세요."));
-        if (!passwordEncoder.matches(oAuth2MergeRequestDto.getPassword(), foundUser.getPassword())) {
+        if (!passwordEncoder.matches(oAuth2MergeReqDto.getPassword(), foundUser.getPassword())) {
             throw new BadCredentialsException("사용자 정보를 확인하세요.");
         }
 
 //        userRepository.updateOAuth2Info(foundUser.getUserId(), oAuth2MergeRequestDto.getProvider(), oAuth2MergeRequestDto.getProviderUserId());
-        oAuth2UserRepository.insertOAuth2User(oAuth2MergeRequestDto.toOAuth2User(foundUser.getUserId()));
+        oAuth2UserRepository.insertOAuth2User(oAuth2MergeReqDto.toOAuth2User(foundUser.getUserId()));
 
         return Map.of(
                 "status", HttpStatus.OK.value(),
@@ -50,8 +50,8 @@ public class OAuth2AuthService {
         );
     }
 
-    public Map<String, Object> signup(OAuth2SignupRequestDto oAuth2SignupRequestDto) {
-        Optional<User> existingUser = userRepository.findByEmail(oAuth2SignupRequestDto.getEmail());
+    public Map<String, Object> signup(OAuth2SignupReqDto oAuth2SignupReqDto) {
+        Optional<User> existingUser = userRepository.findByEmail(oAuth2SignupReqDto.getEmail());
         if (existingUser.isPresent()) {
             return Map.of(
                     "status", HttpStatus.CONFLICT.value(),
@@ -60,7 +60,7 @@ public class OAuth2AuthService {
             );
         }
 
-        Optional<User> user = userRepository.save(oAuth2SignupRequestDto.toEntity(passwordEncoder));
+        Optional<User> user = userRepository.save(oAuth2SignupReqDto.toEntity(passwordEncoder));
         Role role = Role.builder()
                 .roleId(3)
                 .roleName("ROLE_TEMPORARY")
@@ -71,7 +71,7 @@ public class OAuth2AuthService {
                 .role(role)
                 .build();
         userRoleRepository.save(userRole);
-        oAuth2UserRepository.insertOAuth2User(oAuth2SignupRequestDto.toOAuth2User(user.get().getUserId()));
+        oAuth2UserRepository.insertOAuth2User(oAuth2SignupReqDto.toOAuth2User(user.get().getUserId()));
 
         return Map.of(
                 "status", HttpStatus.OK.value(),
