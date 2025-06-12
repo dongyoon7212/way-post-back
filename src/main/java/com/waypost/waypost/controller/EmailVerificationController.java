@@ -6,6 +6,8 @@ import com.waypost.waypost.dto.emailVerification.VerifyCodeReqDto;
 import com.waypost.waypost.entity.User;
 import com.waypost.waypost.service.AccountService;
 import com.waypost.waypost.service.EmailVerificationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 import java.util.Optional;
 
+@Tag(name = "이메일 인증", description = "이메일 인증 관련 API")
 @RestController
 @RequestMapping("/mail")
 public class  EmailVerificationController {
@@ -26,7 +28,7 @@ public class  EmailVerificationController {
     @Autowired
     private AccountService accountService;
 
-    // 회원가입용 인증 코드 요청 (userId를 프론트가 알고 있음)
+    @Operation(summary = "일반 사용자 전환 인증 메일 전송", description = "일반 사용자 전환을 위한 인증 메일을 전송합니다.")
     @PostMapping("/send-code")
     public ResponseEntity<?> sendCode(@RequestBody SendCodeReqDto sendCodeReqDto) {
         int userId = sendCodeReqDto.getUserId();
@@ -42,7 +44,7 @@ public class  EmailVerificationController {
         return ResponseEntity.ok().body("인증 코드가 발송되었습니다.");
     }
 
-    // 비밀번호 찾기용 인증 코드 요청 (email만 사용)
+    @Operation(summary = "비밀번호 찾기 인증 메일 전송", description = "비밀번호 찾기를 위한 인증 메일을 전송합니다.")
     @PostMapping("/send-reset-code")
     public ResponseEntity<?> sendResetCode(@RequestBody SendCodeReqDto sendCodeReqDto) {
         String email = sendCodeReqDto.getEmail();
@@ -54,6 +56,7 @@ public class  EmailVerificationController {
         return ResponseEntity.ok().body("인증 코드가 발송되었습니다.");
     }
 
+    @Operation(summary = "인증 메일 확인", description = "인증 메일이 유효한지 체크합니다.")
     @PostMapping("/verify-code")
     public ResponseEntity<?> verifyCode(@RequestBody VerifyCodeReqDto verifyCodeReqDto) {
         Optional<User> user = accountService.getUserByEmail(verifyCodeReqDto.getEmail());
