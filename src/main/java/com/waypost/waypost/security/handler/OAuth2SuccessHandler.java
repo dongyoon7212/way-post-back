@@ -46,7 +46,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // OAuth2 동기화
         if (oAuth2User == null) { //죠랄남 개같은거
             // oAuth2User 않은 경우: 프론트로 provider 정보와 providerUserId 전달
-            response.sendRedirect("http://" + clientAddress + "/auth/oauth2?provider=" + provider + "&providerUserId=" + providerUserId + "&email=" + email);
+            response.sendRedirect(clientAddress + "/auth/oauth2?provider=" + provider + "&providerUserId=" + providerUserId + "&email=" + email);
             return;
         }
 
