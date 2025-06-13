@@ -23,6 +23,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     @Value("${client.deploy-address}")
     private String clientAddress;
 
+    @Value("${server.deploy-address}")
+    private String developAddress;
+
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -54,7 +57,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         // OAuth2 로그인을 통해 회원가입을 진행한 기록이 있는지 (연동이 된 경우)
         String accessToken = jwtUtil.generateToken(Integer.toString(findByUserIdRespDto.getUser().getUserId()), findByUserIdRespDto.getUser().getEmail(), false);
-        response.sendRedirect("http://" + clientAddress + "/auth/oauth2/signin?accessToken=" + accessToken);
+        response.sendRedirect(clientAddress + "/auth/oauth2/signin?accessToken=" + accessToken);
 
     }
 }
