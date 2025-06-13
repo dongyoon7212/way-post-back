@@ -86,7 +86,7 @@ way-post-back/
 
 ### ✅ 접속 경로
 ```
-http://localhost:8080/swagger-ui.html
+https://way-post-back.onrender.com/swagger-ui.html
 ```
 
 ### ✅ Swagger에 인증 헤더 추가 (JWT 사용 시)
