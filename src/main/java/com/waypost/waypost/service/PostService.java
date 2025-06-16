@@ -1,19 +1,25 @@
 package com.waypost.waypost.service;
 
+import com.waypost.waypost.dto.account.FindByUserIdRespDto;
 import com.waypost.waypost.dto.post.*;
 import com.waypost.waypost.entity.Comment;
 import com.waypost.waypost.entity.PhotoPost;
 import com.waypost.waypost.repository.PhotoPostRepository;
+import com.waypost.waypost.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PostService {
 
     @Autowired
     private PhotoPostRepository photoPostRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public int uploadPhotoPost(UploadPhotoPostReqDto uploadPhotoPostReqDto) {
         PhotoPost photoPost = PhotoPost.builder()
@@ -36,13 +42,19 @@ public class PostService {
         return photoPostRepository.getPhotoPostListByUserId(userId, currentUserId);
     }
 
-    public int addComment(AddCommentReqDto addCommentReqDto) {
+    public Map<String, Object> addComment(AddCommentReqDto addCommentReqDto) {
         Comment comment = Comment.builder()
                 .photoPostId(addCommentReqDto.getPhotoPostId())
                 .userId(addCommentReqDto.getUserId())
                 .content(addCommentReqDto.getContent())
                 .build();
-        return photoPostRepository.addComment(comment);
+        photoPostRepository.addComment(comment);
+        Optional<FindByUserIdRespDto> user = userRepository.findByUserId(addCommentReqDto.getUserId(), null);
+        Map<String, Object> result = new HashMap<>();
+        result.put("comment", comment);
+        result.put("user", user);
+
+        return result;
     }
 
     public int removePostByPhotoPostId(int photoPostId) {

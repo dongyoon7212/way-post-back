@@ -68,7 +68,6 @@ public class AuthService {
     }
 
     public SignInRespDto signIn(SignInReqDto signInReqDto) {
-        System.out.println(signInReqDto);
         User foundUser = userRepository.findByEmail(signInReqDto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 확인하세요."));
         if (!passwordEncoder.matches(signInReqDto.getPassword(), foundUser.getPassword())) {
